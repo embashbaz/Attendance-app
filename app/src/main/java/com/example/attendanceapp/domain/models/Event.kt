@@ -4,6 +4,7 @@ import androidx.room.PrimaryKey
 
 data class Event(
     val eventId: Int,
-    val enventType: String,
+    val eventType: String,
+    val eventName: String,
     val ownerId: String
     )
