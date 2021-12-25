@@ -1,8 +1,11 @@
-package com.example.attendanceapp.data.local.entity
+package com.example.attendanceapp.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.attendanceapp.data.local.entity.AttendanceEntity
+import com.example.attendanceapp.data.local.entity.AttendeeEntity
+import com.example.attendanceapp.data.local.entity.EventEntity
 import com.example.attendanceapp.domain.models.Attendance
 import kotlinx.coroutines.flow.Flow
 
