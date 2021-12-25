@@ -1,3 +1,9 @@
 package com.example.attendanceapp.domain.models
 
-data class Event()
+import androidx.room.PrimaryKey
+
+data class Event(
+    val eventId: Int,
+    val enventType: String,
+    val ownerId: String
+    )
