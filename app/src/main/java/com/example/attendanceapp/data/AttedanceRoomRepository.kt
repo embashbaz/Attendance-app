@@ -16,18 +16,28 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainReposit
              emit(OperationStatus.Success("record added"))
 
         }catch (e: Exception){
-            emit(OperationStatus.Error(message = e.toString()))
+            emit(OperationStatus.Error("",message = e.toString()))
         }
-
-
     }
 
-    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> {
-        TODO("Not yet implemented")
+    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = flow{
+        try {
+            dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
+            emit(OperationStatus.Success("record added"))
+
+        }catch (e: Exception){
+            emit(OperationStatus.Error("",message = e.toString()))
+        }
     }
 
-    override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>> {
-        TODO("Not yet implemented")
+    override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>>  = flow{
+        try {
+            dao.insertAttendance(attendees.map { it.attendanceToAttendanceEntity() })
+            emit(OperationStatus.Success("records added"))
+
+        }catch (e: Exception){
+            emit(OperationStatus.Error("",message = e.toString()))
+        }
     }
 
     override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>> {
