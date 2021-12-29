@@ -7,6 +7,7 @@ import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainRepository {
@@ -36,15 +37,27 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainReposit
             emit(OperationStatus.Success("records added"))
 
         }catch (e: Exception){
-            emit(OperationStatus.Error("",message = e.toString()))
+            emit(OperationStatus.Error<String>(message = e.toString()))
         }
     }
 
-    override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>> {
-        TODO("Not yet implemented")
+    override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>>  = flow{
+        try {
+            val events = dao.getEvents().map { it.eventEntityToEvent() }
+            emit(OperationStatus.Success(events))
+
+        }catch (e: Exception){
+           emit(OperationStatus.Error<List<Event>>(message = e.toString()))
+        }
     }
 
-    override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> {
-        TODO("Not yet implemented")
+    override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> = flow{
+        try {
+            val attendees = dao.getAttendeeByEvent(eventId).map { it.AttendeeEntityToAttendee() }
+            emit(OperationStatus.Success(attendees))
+
+        }catch (e: Exception){
+            emit(OperationStatus.Error<List<Attendee>>(message = e.toString()))
+        }
     }
 }

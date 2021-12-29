@@ -23,17 +23,17 @@ interface AttendanceAppDao {
     fun insertAttendance(attendees: List<AttendanceEntity> )
 
     @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY day DESC")
-    fun getAttendanceByEvent(eventId: Int): Flow<List<Attendance>>
+    fun getAttendanceByEvent(eventId: Int): List<Attendance>
 
     @Query("SELECT * FROM AttendanceEntity WHERE attendeeId = :attendeeId AND eventId = :eventId ORDER BY day DESC")
-    fun getAttendanceByAttendee(attendeeId: Int, eventId: Int): Flow<List<Attendance>>
+    fun getAttendanceByAttendee(attendeeId: Int, eventId: Int): List<Attendance>
 
     @Query("SELECT * FROM AttendanceEntity WHERE day = :day AND eventId = :eventId ORDER BY time DESC")
-    fun getAttendanceByDay(day: String, eventId: Int): Flow<List<Attendance>>
+    fun getAttendanceByDay(day: String, eventId: Int): List<Attendance>
 
     @Query("SELECT * FROM AttendeeEntity WHERE eventDbId = :eventId ORDER BY personDbId DESC")
-    fun getAttendeeByEvent(eventId: Int): Flow<List<AttendeeEntity>>
+    fun getAttendeeByEvent(eventId: Int): List<AttendeeEntity>
 
     @Query("SELECT * FROM EventEntity ORDER BY eventId DESC")
-    fun getEvents(): Flow<List<EventEntity>>
+    fun getEvents(): List<EventEntity>
 }
