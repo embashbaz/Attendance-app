@@ -12,10 +12,11 @@ import kotlinx.coroutines.flow.flow
 class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainRepository {
     override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>>  = flow{
         try {
-            dao.insertEvent(event.map{i})
+            dao.insertEvent(event.eventToEventEntity())
+             emit(OperationStatus.Success("record added"))
 
         }catch (e: Exception){
-            return emit(OperationStatus.Error(message = e.toString() ?: "An error occured"))
+            emit(OperationStatus.Error(message = e.toString()))
         }
 
 
