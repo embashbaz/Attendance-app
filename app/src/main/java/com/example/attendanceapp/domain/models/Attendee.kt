@@ -6,7 +6,7 @@ import com.example.attendanceapp.data.local.entity.AttendeeEntity
 data class Attendee (
     val personDbId: Int,
     val eventDbId: Int,
-    val name: Int,
+    val name: String,
     val dateAdded: String,
     val pictureId: String
 ){

@@ -9,7 +9,7 @@ data class AttendeeEntity (
     @PrimaryKey
     val personDbId: Int,
     val eventDbId: Int,
-    val name: Int,
+    val name: String,
     val dateAdded: String,
     val pictureId: String
     ){
