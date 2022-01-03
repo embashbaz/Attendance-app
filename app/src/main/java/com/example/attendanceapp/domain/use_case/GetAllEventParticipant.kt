@@ -8,16 +8,15 @@ import kotlinx.coroutines.flow.Flow
 
 class GetAllEventParticipant(private val repository: AttendanceMainRepository) {
 
-    suspend operator fun invoke(eventId: Int): Flow<OperationStatus<List<Attendee>>>{
-      if (eventId < 0){
+    suspend operator fun invoke(eventId: Int): Flow<OperationStatus<List<Attendee>>> {
+        if (eventId < 0) {
+            return flow {
+                emit(OperationStatus.Error(message = "Invalid event id"))
 
-          return flow {
-              emit(OperationStatus.Error(message = "Invalid event id"))
+            }
+        }
 
-          }
-      }
-
-       return repository.getAllParticipants(eventId)
+        return repository.getAllParticipants(eventId)
     }
 
 

@@ -1,6 +1,5 @@
 package com.example.attendanceapp.domain.models
 
-import androidx.room.PrimaryKey
 import com.example.attendanceapp.data.local.entity.AttendeeEntity
 
 data class Attendee (
