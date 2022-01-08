@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/fragment_event_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_event_list.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_new_attendance.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/new_attendee.xml" value="0.1" />
         <entry key="app/src/main/res/layout/new_event_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/menu/event_type_menu.xml" value="0.190625" />
       </map>
