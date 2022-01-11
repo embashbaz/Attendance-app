@@ -32,7 +32,7 @@ class AddAttendeeTest {
 
     }
     @Test
-    fun `add attendee with network error`() =  runBlocking {
+    fun `add attendee with dbError error`() =  runBlocking {
         repository.returnDbError(true)
         val response = addAttendee(5, "this", "").first()
         assertThat(response.message).isEqualTo("Error")
