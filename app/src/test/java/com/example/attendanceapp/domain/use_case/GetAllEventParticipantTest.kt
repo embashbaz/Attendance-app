@@ -18,10 +18,10 @@ class GetAllEventParticipantTest {
     fun setUp() {
         repository = AttendanceFakeRepoImpl()
         getEventParticipants = GetAllEventParticipant(repository)
-        insertEvents()
+        insertEventParticipants()
     }
 
-    fun insertEvents(){
+    private fun insertEventParticipants(){
         runBlocking {
             ('a'..'z').forEachIndexed { index, c ->
                 val attendee = Attendee(index, index, c.toString(), c.toString(), "")
