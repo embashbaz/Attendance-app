@@ -20,7 +20,7 @@ class GetAllEventsTest {
         insertEvents()
     }
 
-    fun insertEvents(){
+    fun insertEvents() {
         runBlocking {
             ('a'..'z').forEachIndexed { index, c ->
                 val event = Event(index, c.toString(), c.toString(), c.toString())

@@ -21,14 +21,13 @@ class GetAllEventParticipantTest {
         insertEventParticipants()
     }
 
-    private fun insertEventParticipants(){
+    private fun insertEventParticipants() {
         runBlocking {
             ('a'..'z').forEachIndexed { index, c ->
                 val attendee = Attendee(index, index, c.toString(), c.toString(), "")
                 repository.insertAttendee(attendee)
             }
         }
-
 
     }
 
