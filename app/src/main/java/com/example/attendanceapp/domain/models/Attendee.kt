@@ -15,7 +15,7 @@ data class Attendee (
             personDbId = personDbId,
             eventDbId = eventDbId,
             name = name,
-            dateAdded =dateAdded,
+            dateAdded = dateAdded,
             pictureId = pictureId
         )
 
