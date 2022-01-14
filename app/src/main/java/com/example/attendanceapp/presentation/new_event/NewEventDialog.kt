@@ -39,7 +39,7 @@ class NewEventDialog : DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    fun getUiDataInput() {
+    private fun getUiDataInput() {
         newEventViewModel.onAddEvent(
             stringFromTl(newEventDialogBinding.eventNameTl),
             stringFromTl(newEventDialogBinding.eventTypeDropdown)
@@ -47,7 +47,7 @@ class NewEventDialog : DialogFragment() {
         collectAddingEventResult()
     }
 
-    fun collectAddingEventResult() {
+    private fun collectAddingEventResult() {
         collectLatestLifecycleFlow(newEventViewModel.screenEvent) {
             if (it is NewEventViewModel.UIEvent.ShowToast) {
                 showLongToast(it.message)
