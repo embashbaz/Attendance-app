@@ -28,19 +28,10 @@ class EventListViewModel @Inject constructor(private val getAllEventUC: GetAllEv
             getAllEventUC().collect { result ->
                 when (result) {
                     is OperationStatus.Success -> {
-
-                        if (result.data!!.isEmpty()) {
-                            _eventListState.value = eventListState.value.copy(
-                                isLoading = false,
-                                noData = true
-                            )
-                        } else {
-                            _eventListState.value = eventListState.value.copy(
-                                isLoading = false,
-                                allEvent = result.data!!
-                            )
-                        }
-
+                        _eventListState.value = eventListState.value.copy(
+                            isLoading = false,
+                            allEvent = result.data!!
+                        )
 
                     }
 
