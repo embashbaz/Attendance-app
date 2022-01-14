@@ -42,27 +42,26 @@ class EventListFragment : Fragment() {
         collectUIEvents()
     }
 
-    private fun collectEventsStates(){
-        collectLatestLifecycleFlow(eventListViewModel.eventListState){ state ->
-            if(state.isLoading){
+    private fun collectEventsStates() {
+        collectLatestLifecycleFlow(eventListViewModel.eventListState) { state ->
+            if (state.isLoading) {
                 eventListFragmentBinding.eventListProgres.visibility = View.VISIBLE
-            }else{
+            } else {
                 eventListFragmentBinding.eventListProgres.visibility = View.INVISIBLE
             }
 
-            if (state.allEvent.isNotEmpty()){
+            if (state.allEvent.isNotEmpty()) {
                 eventListFragmentBinding.recyclerView.visibility = View.INVISIBLE
-                eventListAdapter.setData(state.allEvent as ArrayList<Any>)
+                eventListAdapter.setData(state.allEvent)
 
             }
 
         }
-
-
     }
-    private fun collectUIEvents(){
-        collectLatestLifecycleFlow(eventListViewModel.eventListUIEvent){ event ->
-            if (event is EventListViewModel.EventListUIEvent.ShowSnackBar){
+
+    private fun collectUIEvents() {
+        collectLatestLifecycleFlow(eventListViewModel.eventListUIEvent) { event ->
+            if (event is EventListViewModel.EventListUIEvent.ShowSnackBar) {
                 showLongSnackBar(requireView(), event.message)
             }
         }
@@ -70,7 +69,7 @@ class EventListFragment : Fragment() {
 
     }
 
-    private fun setUpRecyclerView(){
+    private fun setUpRecyclerView() {
         eventListFragmentBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         eventListFragmentBinding.recyclerView.adapter = eventListAdapter
     }

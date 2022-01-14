@@ -10,7 +10,7 @@ class EventListAdapter (onClick: (Any) -> Unit) :
     RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
 
     private val mOnclick = onClick
-    private val allItems = ArrayList<Any>()
+    private var allItems = emptyList<Any>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent, mOnclick)
@@ -26,9 +26,9 @@ class EventListAdapter (onClick: (Any) -> Unit) :
     override fun getItemCount() = allItems.size
 
 
-    fun setData(items: ArrayList<Any>) {
-        allItems.clear()
-        allItems.addAll(items)
+    fun setData(items: List<Any>) {
+
+        allItems = items
         notifyDataSetChanged()
 
     }
