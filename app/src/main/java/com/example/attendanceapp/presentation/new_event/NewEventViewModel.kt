@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.use_case.AddEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -15,7 +14,7 @@ import javax.inject.Inject
 class NewEventViewModel @Inject constructor(private val addEvent: AddEvent) : ViewModel() {
 
     private val _addEventState = MutableStateFlow(NewEventDialogState())
-    val addEventState = _addEventState.asStateFlow()
+    private val addEventState = _addEventState.asStateFlow()
 
     private val _screenEvent = MutableSharedFlow<UIEvent>()
     val screenEvent = _screenEvent.asSharedFlow()
