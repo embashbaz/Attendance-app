@@ -11,7 +11,9 @@ import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentEventListBinding
 import com.example.attendanceapp.presentation.new_event.NewEventDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EventListFragment : Fragment() {
 
     private lateinit var eventListFragmentBinding: FragmentEventListBinding

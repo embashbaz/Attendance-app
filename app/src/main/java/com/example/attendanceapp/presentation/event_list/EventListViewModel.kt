@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.use_case.GetAllEvents
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class EventListViewModel @Inject constructor(private val getAllEventUC: GetAllEvents) :
     ViewModel() {
 
