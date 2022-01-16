@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentEventListBinding
+import com.example.attendanceapp.presentation.new_event.NewEventDialog
 
 class EventListFragment : Fragment() {
 
@@ -28,8 +29,18 @@ class EventListFragment : Fragment() {
         setUpRecyclerView()
 
         getEvents()
+        onNewEventFbClicked()
 
         return view
+    }
+
+    private fun onNewEventFbClicked() {
+        eventListFragmentBinding.addEventBt.setOnClickListener{
+            val newEventDialog = NewEventDialog()
+            newEventDialog.show(parentFragmentManager, "New Event")
+
+
+        }
     }
 
     private fun onEventClicked(item: Any) {
