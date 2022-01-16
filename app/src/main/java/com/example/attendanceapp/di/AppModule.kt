@@ -22,6 +22,8 @@ object AppModule {
         return AttendanceRoomRepository(db.dao)
     }
 
+    @Provides
+    @Singleton
     fun provideAttendanceDatabase(app: Application): AttendanceAppDatabase{
         return Room.databaseBuilder(
             app, AttendanceAppDatabase::class.java, "attendance_db"
