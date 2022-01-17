@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "295ff7ba968b931db7ba77507e2461b8",
+    "identityHash": "ac8aa74e5908524f069236ab4b02b746",
     "entities": [
       {
         "tableName": "AttendanceEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attendanceId` REAL NOT NULL, `day` TEXT NOT NULL, `time` TEXT NOT NULL, `attendeeId` INTEGER NOT NULL, `attendeeName` TEXT NOT NULL, `eventId` INTEGER NOT NULL, `eventName` TEXT NOT NULL, PRIMARY KEY(`attendanceId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attendanceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` TEXT NOT NULL, `time` TEXT NOT NULL, `attendeeId` INTEGER NOT NULL, `attendeeName` TEXT NOT NULL, `eventId` INTEGER NOT NULL, `eventName` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "attendanceId",
             "columnName": "attendanceId",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -55,7 +55,7 @@
           "columnNames": [
             "attendanceId"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -146,7 +146,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '295ff7ba968b931db7ba77507e2461b8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ac8aa74e5908524f069236ab4b02b746')"
     ]
   }
 }

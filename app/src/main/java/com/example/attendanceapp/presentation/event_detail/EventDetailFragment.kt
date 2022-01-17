@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.databinding.FragmentEventDetailBinding
 import com.example.attendanceapp.domain.models.Event
@@ -37,6 +39,14 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
         collectEventDetailInfo()
 
         addAttendeeBtListener()
+
+        //ToDo: replace this crap
+        eventDetailBinding.stupidBt.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putParcelable("event_info",requireArguments().getParcelable<Event>("event_clicked")!!)
+            this.findNavController().navigate(R.id.action_eventDetailFragment_to_newAttendanceFragment, bundle)
+        }
+
 
         return view
     }

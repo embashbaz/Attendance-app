@@ -6,7 +6,8 @@ import com.example.attendanceapp.domain.models.Attendance
 
 @Entity
 data class AttendanceEntity (
-    @PrimaryKey val attendanceId: Float,
+    @PrimaryKey (autoGenerate = true)
+    val attendanceId: Long,
     val day: String,
     val time: String,
     val attendeeId: Int,

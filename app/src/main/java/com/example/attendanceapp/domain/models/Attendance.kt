@@ -1,10 +1,9 @@
 package com.example.attendanceapp.domain.models
 
-import androidx.room.PrimaryKey
 import com.example.attendanceapp.data.local.entity.AttendanceEntity
 
 data class Attendance(
-    val attendanceId: Float,
+    val attendanceId: Long,
     val day: String,
     val time: String,
     val attendeeId: Int,

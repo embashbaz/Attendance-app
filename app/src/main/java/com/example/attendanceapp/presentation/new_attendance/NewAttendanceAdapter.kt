@@ -40,6 +40,7 @@ class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
         RecyclerView.ViewHolder(attendeeItemBinding.root) {
         fun bind(item: Any, itemCheckListener: OnItemCheckListener) {
             if (item is Attendee) {
+                attendeeItemBinding.presentCheckBox.isClickable = false
                 attendeeItemBinding.presentCheckBox.visibility = View.VISIBLE
                 attendeeItemBinding.attendeeIdTxt.setText(item.personDbId.toString())
                 attendeeItemBinding.attendeeNameTxt.setText(item.name)

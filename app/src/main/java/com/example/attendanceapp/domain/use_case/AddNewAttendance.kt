@@ -33,7 +33,7 @@ class AddNewAttendance @Inject constructor(private val repository: AttendanceMai
         for (item in attendees) {
             attendance.add(
                 Attendance(
-                    0F,
+                    0L,
                     getTodayToday(),
                     getTime(),
                     item.personDbId,
