@@ -37,7 +37,15 @@ class EventListAdapter (onClick: (Any) -> Unit) :
 
     class ViewHolder(val eventItemBinding: EventItemBinding, onClick: (Any) -> Unit) : RecyclerView.ViewHolder(eventItemBinding.root){
 
+        lateinit var event: Any
+        init {
+            eventItemBinding.root.setOnClickListener {
+                onClick(event!!)
+            }
+        }
+
         fun bind(item: Any){
+            event = item
             if (item is Event){
                 eventItemBinding.eventNameEventListTxt.setText(item.eventName)
                 eventItemBinding.eventTypeEventListTxt.setText(item.eventType)
