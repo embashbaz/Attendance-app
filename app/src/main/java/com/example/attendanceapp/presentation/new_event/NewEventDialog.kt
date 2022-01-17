@@ -1,10 +1,14 @@
 package com.example.attendanceapp.presentation.new_event
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
@@ -18,25 +22,30 @@ class NewEventDialog : DialogFragment() {
     private val newEventViewModel: NewEventViewModel by viewModels()
 
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-
-            val builder = AlertDialog.Builder(it)
-
-            val inflater = requireActivity().layoutInflater;
-            newEventDialogBinding = NewEventDialogBinding.inflate(inflater)
-            val view = newEventDialogBinding.root
-            builder.setView(view)
-            builder.setPositiveButton("Save event") { dialog, id ->
-                //getUiDataInput()
-            }
 
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-            builder.create()
+        newEventDialogBinding = NewEventDialogBinding.inflate(inflater, container, false)
+        val view = newEventDialogBinding.root
 
+        val items = listOf("Event", "Class")
+        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, items)
+        (newEventDialogBinding.eventTypeDropdown.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        } ?: throw IllegalStateException("Activity cannot be null")
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+       // super.onViewCreated(view, savedInstanceState)
+        newEventDialogBinding.saveEventBt.setOnClickListener {
+            getUiDataInput()
+        }
+
     }
 
     private fun getUiDataInput() {
