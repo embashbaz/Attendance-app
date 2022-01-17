@@ -30,10 +30,15 @@ class EventListFragment : Fragment() {
         eventListAdapter = EventListAdapter { item -> onEventClicked(item) }
         setUpRecyclerView()
 
-        getEvents()
+        //getEvents()
         onNewEventFbClicked()
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getEvents()
     }
 
     private fun onNewEventFbClicked() {
@@ -64,8 +69,9 @@ class EventListFragment : Fragment() {
             }
 
             if (state.allEvent.isNotEmpty()) {
-                eventListFragmentBinding.recyclerView.visibility = View.INVISIBLE
+                eventListFragmentBinding.recyclerView.visibility = View.VISIBLE
                 eventListAdapter.setData(state.allEvent)
+
 
             }
 
