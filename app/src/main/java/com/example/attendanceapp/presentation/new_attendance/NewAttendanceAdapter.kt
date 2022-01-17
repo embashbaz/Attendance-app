@@ -12,7 +12,7 @@ class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
     RecyclerView.Adapter<NewAttendanceAdapter.ViewHolder>() {
 
 
-    private val allItems = ArrayList<Any>()
+    private var allItems: List<Any> = emptyList()
     private val itemCheckListener = onItemCheckListener
 
 
@@ -29,6 +29,12 @@ class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
     }
 
     override fun getItemCount() = allItems.size
+
+    fun setData(items: List<Any>) {
+        allItems = items
+        notifyDataSetChanged()
+
+    }
 
     class ViewHolder(val attendeeItemBinding: AttendeeItemBinding) :
         RecyclerView.ViewHolder(attendeeItemBinding.root) {

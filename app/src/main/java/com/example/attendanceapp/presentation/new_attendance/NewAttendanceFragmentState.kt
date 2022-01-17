@@ -5,6 +5,7 @@ import com.example.attendanceapp.domain.models.Event
 
 data class NewAttendanceFragmentState (
     val allParticipants: List<Attendee> = emptyList(),
-    val eventObject: Event = Event()
+    val eventObject: Event = Event(),
+    var checkedParticipants: MutableList<Attendee> = mutableListOf()
 
         )

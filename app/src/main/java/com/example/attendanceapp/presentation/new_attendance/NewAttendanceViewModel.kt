@@ -7,11 +7,13 @@ import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.use_case.AddNewAttendance
 import com.example.attendanceapp.domain.use_case.GetAllEventParticipant
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class NewAttendanceViewModel @Inject constructor(
     private val getAllEventParticipant: GetAllEventParticipant,
     private val addNewAttendance: AddNewAttendance
@@ -28,6 +30,14 @@ class NewAttendanceViewModel @Inject constructor(
             eventObject = event
         )
         getAllAttendee()
+    }
+
+    fun addItemToAttendance(attendee: Attendee) {
+        _newAttendanceState.value.checkedParticipants.add(attendee)
+    }
+
+    fun removeItemToAttendance(attendee: Attendee) {
+        _newAttendanceState.value.checkedParticipants.remove(attendee)
     }
 
     fun getAllAttendee() {
@@ -54,12 +64,12 @@ class NewAttendanceViewModel @Inject constructor(
         }
     }
 
-    fun addAttendance(attendees: ArrayList<Attendee>) {
+    fun addAttendance() {
         viewModelScope.launch(Dispatchers.IO) {
             addNewAttendance(
                 _newAttendanceState.value.eventObject.eventId,
                 _newAttendanceState.value.eventObject.eventName,
-                attendees
+                _newAttendanceState.value.checkedParticipants
             ).collect { result ->
                 when (result) {
                     is OperationStatus.Success -> {

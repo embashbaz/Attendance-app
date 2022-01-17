@@ -15,7 +15,7 @@ class AddNewAttendance @Inject constructor(private val repository: AttendanceMai
     suspend operator fun invoke(
         eventId: Int,
         eventName: String,
-        attendees: ArrayList<Attendee>
+        attendees: List<Attendee>
     ): Flow<OperationStatus<String>> {
         if (eventId < 1) {
             return flow {
