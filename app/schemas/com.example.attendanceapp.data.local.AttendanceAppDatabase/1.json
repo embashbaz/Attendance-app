@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9ed4493d9ed5fce85043d1b447f58b8b",
+    "identityHash": "295ff7ba968b931db7ba77507e2461b8",
     "entities": [
       {
         "tableName": "AttendanceEntity",
@@ -62,7 +62,7 @@
       },
       {
         "tableName": "AttendeeEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`personDbId` INTEGER NOT NULL, `eventDbId` INTEGER NOT NULL, `name` TEXT NOT NULL, `dateAdded` TEXT NOT NULL, `pictureId` TEXT NOT NULL, PRIMARY KEY(`personDbId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`personDbId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventDbId` INTEGER NOT NULL, `name` TEXT NOT NULL, `dateAdded` TEXT NOT NULL, `pictureId` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "personDbId",
@@ -99,7 +99,7 @@
           "columnNames": [
             "personDbId"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -146,7 +146,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ed4493d9ed5fce85043d1b447f58b8b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '295ff7ba968b931db7ba77507e2461b8')"
     ]
   }
 }

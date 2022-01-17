@@ -6,7 +6,7 @@ import com.example.attendanceapp.domain.models.Attendee
 
 @Entity
 data class AttendeeEntity (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val personDbId: Int,
     val eventDbId: Int,
     val name: String,

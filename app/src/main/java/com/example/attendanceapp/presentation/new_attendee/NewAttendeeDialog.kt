@@ -1,39 +1,47 @@
 package com.example.attendanceapp.presentation.new_attendee
 
-import android.app.AlertDialog
-import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.NewAttendeeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
     private lateinit var newAttendeeDialogBinding: NewAttendeeBinding
     private val newAttendeeViewModel: NewAttendeeViewModel by viewModels()
+    internal lateinit var newAttendeeDialogListener: NewAttendeeDialogListener
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-
-            val builder = AlertDialog.Builder(it)
-
-            val inflater = requireActivity().layoutInflater;
-            newAttendeeDialogBinding = NewAttendeeBinding.inflate(inflater)
-            val view = newAttendeeDialogBinding .root
-            builder.setView(view)
-            builder.setPositiveButton("Save attendee") { dialog, id ->
-                getUiDataInput()
-            }
-
-
-
-            builder.create()
-
-
-        } ?: throw IllegalStateException("Activity cannot be null")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_Alert)
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+
+        newAttendeeDialogBinding = NewAttendeeBinding.inflate(inflater, container, false)
+        val view = newAttendeeDialogBinding.root
+        newAttendeeDialogBinding.saveAttendeeBt.setOnClickListener {
+            getUiDataInput()
+        }
+
+        return view
+    }
+
+
 
     private fun getUiDataInput() {
         newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl))
@@ -50,6 +58,19 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
                 showLongToast(result.message)
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        newAttendeeDialogListener.onDialogDismissed(true)
+    }
+
+    interface NewAttendeeDialogListener{
+        fun onDialogDismissed(value: Boolean)
+    }
+
+    fun setListener(listener: NewAttendeeDialogListener){
+        newAttendeeDialogListener = listener
     }
 
 }

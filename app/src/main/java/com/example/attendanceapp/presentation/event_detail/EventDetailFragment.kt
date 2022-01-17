@@ -14,7 +14,7 @@ import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EventDetailFragment : Fragment() {
+class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListener {
 
     private lateinit var eventDetailBinding: FragmentEventDetailBinding
     private val eventDetailViewModel: EventDetailViewModel by viewModels()
@@ -44,7 +44,7 @@ class EventDetailFragment : Fragment() {
     private fun addAttendeeBtListener() {
         eventDetailBinding.addAttendeeFb.setOnClickListener{
             val newAttendeeDialog = NewAttendeeDialog(eventId)
-
+            newAttendeeDialog.setListener(this)
             newAttendeeDialog.show(parentFragmentManager, "New Attendee")
         }
     }
@@ -53,7 +53,7 @@ class EventDetailFragment : Fragment() {
         collectLatestLifecycleFlow(eventDetailViewModel.eventDetailState){ data ->
 
             eventDetailBinding.eventNameEventDetailsTxt.setText(data.eventObject.eventName)
-            eventDetailBinding.eventNameEventDetailsTxt.setText(data.eventObject.eventType)
+            eventDetailBinding.eventTypeEventDetailsTxt.setText(data.eventObject.eventType)
             eventId = data.eventObject.eventId
 
             if (data.participants.isNotEmpty()){
@@ -71,6 +71,10 @@ class EventDetailFragment : Fragment() {
 
     private fun onAttendeeClicked(attendee: Any) {
 
+    }
+
+    override fun onDialogDismissed(value: Boolean) {
+        eventDetailViewModel.getAttendees()
     }
 
 
