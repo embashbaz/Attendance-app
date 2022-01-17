@@ -5,8 +5,9 @@ import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetAllEventParticipant(private val repository: AttendanceMainRepository) {
+class GetAllEventParticipant @Inject constructor(private val repository: AttendanceMainRepository) {
 
     suspend operator fun invoke(eventId: Int): Flow<OperationStatus<List<Attendee>>> {
         if (eventId < 0) {

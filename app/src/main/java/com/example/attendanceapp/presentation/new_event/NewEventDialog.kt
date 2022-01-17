@@ -9,9 +9,9 @@ import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.NewEventDialogBinding
-import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
-@EntryPoint
+@AndroidEntryPoint
 class NewEventDialog : DialogFragment() {
 
     lateinit var newEventDialogBinding: NewEventDialogBinding
@@ -28,7 +28,7 @@ class NewEventDialog : DialogFragment() {
             val view = newEventDialogBinding.root
             builder.setView(view)
             builder.setPositiveButton("Save event") { dialog, id ->
-                getUiDataInput()
+                //getUiDataInput()
             }
 
 
