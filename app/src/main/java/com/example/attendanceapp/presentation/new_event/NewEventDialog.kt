@@ -69,7 +69,7 @@ class NewEventDialog : DialogFragment() {
 
             if (it is NewEventViewModel.UIEvent.dismissDialog) {
                 if (it.value) {
-                    dialog?.dismiss()
+                    dialog!!.dismiss()
                 }
             }
         }

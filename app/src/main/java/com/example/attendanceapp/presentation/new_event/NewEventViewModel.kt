@@ -16,7 +16,7 @@ class NewEventViewModel @Inject constructor(private val addEvent: AddEvent) : Vi
     private val _addEventState = MutableStateFlow(NewEventDialogState())
     private val addEventState = _addEventState.asStateFlow()
 
-    private val _screenEvent = MutableSharedFlow<UIEvent>()
+    private val _screenEvent = MutableSharedFlow<UIEvent>(replay = 1)
     val screenEvent = _screenEvent.asSharedFlow()
 
     fun onAddEvent(eventName: String, eventType: String) {
