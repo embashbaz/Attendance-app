@@ -6,7 +6,8 @@ import com.example.attendanceapp.domain.models.Event
 
 @Entity
 data class EventEntity (
-        @PrimaryKey val eventId: Int,
+        @PrimaryKey(autoGenerate = true)
+        val eventId: Int,
         val eventType: String,
         val eventName: String,
         val ownerId: String,

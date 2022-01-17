@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7796664cd5f01b3a91f8be232ae1acc0",
+    "identityHash": "9ed4493d9ed5fce85043d1b447f58b8b",
     "entities": [
       {
         "tableName": "AttendanceEntity",
@@ -106,7 +106,7 @@
       },
       {
         "tableName": "EventEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER NOT NULL, `eventType` TEXT NOT NULL, `eventName` TEXT NOT NULL, `ownerId` TEXT NOT NULL, PRIMARY KEY(`eventId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventType` TEXT NOT NULL, `eventName` TEXT NOT NULL, `ownerId` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "eventId",
@@ -137,7 +137,7 @@
           "columnNames": [
             "eventId"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -146,7 +146,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7796664cd5f01b3a91f8be232ae1acc0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ed4493d9ed5fce85043d1b447f58b8b')"
     ]
   }
 }
