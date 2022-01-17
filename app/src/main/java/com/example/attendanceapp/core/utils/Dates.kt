@@ -23,3 +23,8 @@ fun getYear(): Int{
     val sdf = SimpleDateFormat("yyyy")
     return sdf.format(Date()).toInt()
 }
+
+fun getTime(): String{
+    val sdf = SimpleDateFormat("HH:mm:ss")
+    return sdf.format(Date()).toString()
+}

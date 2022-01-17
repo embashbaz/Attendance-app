@@ -8,12 +8,12 @@ import com.example.attendanceapp.databinding.AttendeeItemBinding
 import com.example.attendanceapp.domain.models.Attendee
 
 
-class NewAttendanceAdapter(val onItemCheckListener: OnItemCheckListener) :
+class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
     RecyclerView.Adapter<NewAttendanceAdapter.ViewHolder>() {
 
 
     private val allItems = ArrayList<Any>()
-    val itemCheckListener = onItemCheckListener
+    private val itemCheckListener = onItemCheckListener
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
