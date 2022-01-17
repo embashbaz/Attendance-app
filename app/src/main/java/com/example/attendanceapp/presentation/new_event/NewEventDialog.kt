@@ -1,5 +1,6 @@
 package com.example.attendanceapp.presentation.new_event
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ class NewEventDialog : DialogFragment() {
 
     lateinit var newEventDialogBinding: NewEventDialogBinding
     private val newEventViewModel: NewEventViewModel by viewModels()
+    internal lateinit var newEventDialogListener: NewEventDialogListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,5 +73,18 @@ class NewEventDialog : DialogFragment() {
                 }
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        newEventDialogListener.onDismissDialog(true)
+    }
+
+    interface NewEventDialogListener{
+        fun onDismissDialog(value: Boolean)
+    }
+
+    fun setListener(listener: NewEventDialogListener) {
+        newEventDialogListener = listener
     }
 }

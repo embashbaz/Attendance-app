@@ -14,7 +14,7 @@ import com.example.attendanceapp.presentation.new_event.NewEventDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EventListFragment : Fragment() {
+class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
     private lateinit var eventListFragmentBinding: FragmentEventListBinding
     private val eventListViewModel: EventListViewModel by viewModels()
@@ -44,6 +44,7 @@ class EventListFragment : Fragment() {
     private fun onNewEventFbClicked() {
         eventListFragmentBinding.addEventBt.setOnClickListener{
             val newEventDialog = NewEventDialog()
+            newEventDialog.setListener(this)
             newEventDialog.show(parentFragmentManager, "New Event")
 
 
@@ -91,6 +92,10 @@ class EventListFragment : Fragment() {
     private fun setUpRecyclerView() {
         eventListFragmentBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         eventListFragmentBinding.recyclerView.adapter = eventListAdapter
+    }
+
+    override fun onDismissDialog(value: Boolean) {
+        getEvents()
     }
 
 }
