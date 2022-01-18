@@ -41,7 +41,10 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
 
     override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>> {
         return flow {
-            emit(OperationStatus.Error(message = "not to be tested yet"))
+            if (!dbError)
+            emit(OperationStatus.Success("record added"))
+            else
+                emit(OperationStatus.Error<String>(message = "Error"))
         }
     }
 
