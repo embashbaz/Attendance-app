@@ -7,7 +7,6 @@ import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainRepository {
@@ -58,6 +57,42 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainReposit
 
         }catch (e: Exception){
             emit(OperationStatus.Error<List<Attendee>>(message = e.toString()))
+        }
+    }
+
+    override suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>> = flow{
+        try {
+            val attendees = dao.getAllAttendance(eventId).map { it.attendanceEntityToAttendance() }
+            emit(OperationStatus.Success(attendees))
+
+        }catch (e: Exception){
+            emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
+        }
+    }
+
+    override suspend fun getAttendanceByAttendee(
+        eventId: Int,
+        attendeeName: String
+    ): Flow<OperationStatus<List<Attendance>>> = flow{
+        try {
+            val attendees = dao.getAttendanceByAttendee(attendeeName, eventId).map { it.attendanceEntityToAttendance() }
+            emit(OperationStatus.Success(attendees))
+
+        }catch (e: Exception){
+            emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
+        }
+    }
+
+    override suspend fun getAttendanceByDate(
+        eventId: Int,
+        day: String
+    ): Flow<OperationStatus<List<Attendance>>> = flow{
+        try {
+            val attendees = dao.getAttendanceByDay(day, eventId).map { it.attendanceEntityToAttendance() }
+            emit(OperationStatus.Success(attendees))
+
+        }catch (e: Exception){
+            emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
         }
     }
 }
