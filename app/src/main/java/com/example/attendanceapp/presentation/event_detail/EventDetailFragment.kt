@@ -20,7 +20,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
 
     private lateinit var eventDetailBinding: FragmentEventDetailBinding
     private val eventDetailViewModel: EventDetailViewModel by viewModels()
-    private lateinit var eventDetailAdapter: EventDetailAdapter
+    private lateinit var genericAttendeeAdapter: GenericAttendeeAdapter
     private var eventId = -1
 
     override fun onCreateView(
@@ -34,7 +34,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
         if(arguments?.getParcelable<Event>("event_clicked") != null){
             eventDetailViewModel.setEventObject(requireArguments().getParcelable<Event>("event_clicked")!!)
         }
-        eventDetailAdapter = EventDetailAdapter { attendee -> onAttendeeClicked(attendee) }
+        genericAttendeeAdapter = GenericAttendeeAdapter { attendee -> onAttendeeClicked(attendee) }
         setUpRecyclerView()
         collectEventDetailInfo()
 
@@ -67,7 +67,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
             eventId = data.eventObject.eventId
 
             if (data.participants.isNotEmpty()){
-                eventDetailAdapter.setData(data.participants as ArrayList<Any>)
+                genericAttendeeAdapter.setData(data.participants as ArrayList<Any>)
             }
 
 
@@ -76,7 +76,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
 
     private fun setUpRecyclerView() {
         eventDetailBinding.eventDetailRecycler.layoutManager = LinearLayoutManager(activity)
-        eventDetailBinding.eventDetailRecycler.adapter = eventDetailAdapter
+        eventDetailBinding.eventDetailRecycler.adapter = genericAttendeeAdapter
     }
 
     private fun onAttendeeClicked(attendee: Any) {

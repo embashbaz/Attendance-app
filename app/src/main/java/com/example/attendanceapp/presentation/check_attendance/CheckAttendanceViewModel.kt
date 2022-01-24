@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.use_case.GetAttendance
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
+@HiltViewModel
 class CheckAttendanceViewModel @Inject constructor(private val getAttendance: GetAttendance) : ViewModel(){
 
 
@@ -34,11 +35,9 @@ class CheckAttendanceViewModel @Inject constructor(private val getAttendance: Ge
             onQuery("")
         }
 
-        fun getDate(date: Date){
-            //T
-
-            onQuery(date.toString())
-        }
+        fun getDate(date: String){
+            onQuery(date)
+            }
 
         fun onQuery(query: String){
             _attendanceState.value = attendanceState.value.copy(

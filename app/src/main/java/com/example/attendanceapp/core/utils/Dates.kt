@@ -13,6 +13,9 @@ fun getDay(): Int{
     val sdf = SimpleDateFormat("dd")
     return sdf.format(Date()).toInt()
 }
+fun getDateFromLong(date: Long): String{
+     return SimpleDateFormat("yyyy-M-dd").format(Date(date))
+}
 
 fun getMonth(): Int{
     val sdf = SimpleDateFormat("M")

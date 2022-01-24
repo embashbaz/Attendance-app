@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.databinding.AttendeeItemBinding
+import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
 
-class EventDetailAdapter (onClick: (Any) -> Unit) :
-    RecyclerView.Adapter<EventDetailAdapter.ViewHolder>(){
+class GenericAttendeeAdapter (onClick: (Any) -> Unit) :
+    RecyclerView.Adapter<GenericAttendeeAdapter.ViewHolder>(){
 
     private val mOnclick = onClick
     private val allItems = ArrayList<Any>()
@@ -46,6 +47,10 @@ class EventDetailAdapter (onClick: (Any) -> Unit) :
                 attendeeItemBinding.attendeeIdTxt.setText(item.personDbId.toString())
                 attendeeItemBinding.attendeeNameTxt.setText(item.name)
 
+            }else if(item is Attendance){
+                attendeeItemBinding.presentCheckBox.visibility = View.INVISIBLE
+                attendeeItemBinding.attendeeIdTxt.setText(item.attendeeName)
+                attendeeItemBinding.attendeeNameTxt.setText("${item.day} / ${item.time}")
             }
 
         }

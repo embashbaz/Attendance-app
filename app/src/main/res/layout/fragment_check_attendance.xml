@@ -33,18 +33,20 @@
                     android:id="@+id/query_by_name_bt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Query by attendee name"/>
+                    android:text="Query by attendee name"
+                    android:onClick="onRadioButtonClicked"/>
 
                 <RadioButton
                     android:id="@+id/query_by_date_bt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Query by date" />
+                    android:text="Query by date"
+                    android:onClick="onRadioButtonClicked"/>
 
             </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout"
+                android:id="@+id/attendee_name_search_tl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -53,7 +55,7 @@
                 android:layout_marginBottom="8dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintEnd_toStartOf="@+id/cal_icon_img"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup">
 
@@ -65,7 +67,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/cal_icon_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -80,12 +82,22 @@
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/attendance_list_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+    <ProgressBar
+        android:id="@+id/attendance_list_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
