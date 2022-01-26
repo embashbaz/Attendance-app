@@ -47,6 +47,12 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
             this.findNavController().navigate(R.id.action_eventDetailFragment_to_newAttendanceFragment, bundle)
         }
 
+        eventDetailBinding.stupidBt2.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("event_id",requireArguments().getParcelable<Event>("event_clicked")!!.eventId)
+            this.findNavController().navigate(R.id.action_eventDetailFragment_to_checkAttendanceFragment, bundle)
+        }
+
 
         return view
     }
@@ -67,7 +73,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
             eventId = data.eventObject.eventId
 
             if (data.participants.isNotEmpty()){
-                genericAttendeeAdapter.setData(data.participants as ArrayList<Any>)
+                genericAttendeeAdapter.setData(data.participants)
             }
 
 

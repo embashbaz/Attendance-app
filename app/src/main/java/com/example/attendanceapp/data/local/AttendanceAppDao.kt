@@ -24,13 +24,13 @@ interface AttendanceAppDao {
     @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY day DESC")
     fun getAttendanceByEvent(eventId: Int): List<Attendance>
 
-    @Query("SELECT * FROM AttendanceEntity WHERE attendeeName LIKE :attendeeNameQuery AND eventId = :eventId ORDER BY attendeeId DESC")
+    @Query("SELECT * FROM AttendanceEntity WHERE attendeeName LIKE '%' || :attendeeNameQuery || '%' AND eventId = :eventId ORDER BY attendanceId DESC")
     fun getAttendanceByAttendee(attendeeNameQuery: String, eventId: Int): List<AttendanceEntity>
 
-    @Query("SELECT * FROM AttendanceEntity WHERE day = :day AND eventId = :eventId ORDER BY attendeeId DESC")
+    @Query("SELECT * FROM AttendanceEntity WHERE day = :day AND eventId = :eventId ORDER BY attendanceId DESC")
     fun getAttendanceByDay(day: String, eventId: Int): List<AttendanceEntity>
 
-    @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY attendeeId DESC")
+    @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY attendanceId DESC")
     fun getAllAttendance(eventId: Int): List<AttendanceEntity>
 
     @Query("SELECT * FROM AttendeeEntity WHERE eventDbId = :eventId ORDER BY personDbId DESC")

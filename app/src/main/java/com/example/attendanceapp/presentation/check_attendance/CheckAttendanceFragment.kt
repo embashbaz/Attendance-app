@@ -6,8 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CheckAttendanceFragment : Fragment() {
 
     private val checkAttendanceViewModel: CheckAttendanceViewModel by viewModels()
-    private lateinit var  checkAttendanceBinding: FragmentCheckAttendanceBinding
+    private lateinit var checkAttendanceBinding: FragmentCheckAttendanceBinding
     private lateinit var genericAttendeeAdapter: GenericAttendeeAdapter
 
     override fun onCreateView(
@@ -39,6 +37,7 @@ class CheckAttendanceFragment : Fragment() {
         checkAttendanceViewModel.setEventId(requireArguments().getInt("event_id"))
         setUpRecyclerView()
         listenToQuery()
+        onRadioButtonClicked()
 
         collectLatestUIState()
         collectLatestUIEvent()
@@ -46,27 +45,27 @@ class CheckAttendanceFragment : Fragment() {
     }
 
 
-
     private fun listenToQuery() {
         checkAttendanceBinding.calIconImg.setOnClickListener {
             openDatePicker()
         }
 
-        checkAttendanceBinding.attendeeNameSearchTl.editText.addTextChangedListener(object : TextWatcher{
+        checkAttendanceBinding.attendeeNameSearchTl.editText!!.addTextChangedListener(object :
+            TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0 != null) {
-                    if(p0.isNotEmpty()){
+                    if (p0.isNotEmpty()) {
                         checkAttendanceViewModel.onQuery(p0.toString())
                     }
                 }
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                TODO("Not yet implemented")
+
             }
 
         })
@@ -74,33 +73,35 @@ class CheckAttendanceFragment : Fragment() {
 
     }
 
-    fun onRadioButtonClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-            if (!checked){
-                checkAttendanceViewModel.setType(0)
+    fun onRadioButtonClicked() {
+
+
+        checkAttendanceBinding.radioGroupType.setOnCheckedChangeListener { radioGroup, i ->
+            when (i) {
+                R.id.query_by_name_bt -> {
+                    checkAttendanceViewModel.setType(1)
+                }
+
+                R.id.query_by_date_bt -> {
+                    checkAttendanceViewModel.setType(2)
+                }
+
+                R.id.all_attendance_bt -> {
+                    checkAttendanceViewModel.setType(0)
+                    checkAttendanceViewModel.onQuery("")
+                }
+
             }
 
-            // Check which radio button was clicked
-            when (view.getId()) {
-                R.id.query_by_name_bt ->
-                    if (checked) {
-                        checkAttendanceViewModel.setType(1)
-                    }
-                R.id.query_by_date_bt ->
-                    if (checked) {
-                        checkAttendanceViewModel.setType(2)
-                    }
-            }
         }
+
     }
 
     private fun onAttendeeClicked(attendee: Any) {
 
     }
 
-    fun openDatePicker(){
+    fun openDatePicker() {
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select date")
@@ -114,26 +115,29 @@ class CheckAttendanceFragment : Fragment() {
 
     }
 
-    fun collectLatestUIState(){
-        collectLatestLifecycleFlow(checkAttendanceViewModel.attendanceState){ state ->
-            if (state.type == 1){
+    fun collectLatestUIState() {
+        collectLatestLifecycleFlow(checkAttendanceViewModel.attendanceState) { state ->
+            if (state.type == 1) {
                 checkAttendanceBinding.attendeeNameSearchTl.visibility = View.VISIBLE
                 checkAttendanceBinding.calIconImg.visibility = View.GONE
-            }else if(state.type == 2){
+            } else if (state.type == 2) {
                 checkAttendanceBinding.attendeeNameSearchTl.visibility = View.GONE
                 checkAttendanceBinding.calIconImg.visibility = View.VISIBLE
-            }else if (state.type == 2){
+            } else if (state.type == 0) {
                 checkAttendanceBinding.attendeeNameSearchTl.visibility = View.GONE
                 checkAttendanceBinding.calIconImg.visibility = View.GONE
             }
-            if (state.isLoading){
+            if (state.isLoading) {
                 checkAttendanceBinding.attendanceListProgress.visibility = View.VISIBLE
-            }else{
+            } else {
                 checkAttendanceBinding.attendanceListProgress.visibility = View.INVISIBLE
             }
 
-            if (state.attendance.isNotEmpty()){
+            if (state.attendance.isNotEmpty()) {
                 genericAttendeeAdapter.setData(state.attendance)
+            }else{
+                showLongSnackBar(requireView(), "No data returned")
+                genericAttendeeAdapter.setData(emptyList())
             }
         }
 
@@ -141,9 +145,9 @@ class CheckAttendanceFragment : Fragment() {
     }
 
     private fun collectLatestUIEvent() {
-        collectLatestLifecycleFlow(checkAttendanceViewModel.attendanceUiEvent){ event ->
+        collectLatestLifecycleFlow(checkAttendanceViewModel.attendanceUiEvent) { event ->
 
-            if (event is CheckAttendanceViewModel.AttendanceListUIEvent.ShowSnackBar){
+            if (event is CheckAttendanceViewModel.AttendanceListUIEvent.ShowSnackBar) {
                 showLongSnackBar(requireView(), event.message)
             }
 

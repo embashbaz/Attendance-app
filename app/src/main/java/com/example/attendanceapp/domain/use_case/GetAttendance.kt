@@ -15,12 +15,9 @@ class GetAttendance @Inject constructor(private val repository: AttendanceMainRe
         query: String
     ): Flow<OperationStatus<List<Attendance>>> {
 
-        if (type !in 3..-1) {
-            return flow {
-                emit(OperationStatus.Error(message = "Invalid type"))
+       // if (type !in 3..-1) {
 
-            }
-        }
+        //}
 
         if (eventId < 1) {
             return flow {
@@ -33,8 +30,13 @@ class GetAttendance @Inject constructor(private val repository: AttendanceMainRe
             return repository.getAllAttendance(eventId)
         } else if (type == 1) {
             return repository.getAttendanceByAttendee(eventId, query)
-        } else {
+        } else if (type == 2){
             return repository.getAttendanceByDate(eventId, query)
+        }else {
+            return flow {
+                emit(OperationStatus.Error(message = "Invalid type"))
+
+            }
         }
 
     }
