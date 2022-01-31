@@ -15,9 +15,6 @@ class GetAttendance @Inject constructor(private val repository: AttendanceMainRe
         query: String
     ): Flow<OperationStatus<List<Attendance>>> {
 
-       // if (type !in 3..-1) {
-
-        //}
 
         if (eventId < 1) {
             return flow {

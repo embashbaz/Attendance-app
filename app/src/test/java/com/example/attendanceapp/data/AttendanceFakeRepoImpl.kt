@@ -12,6 +12,7 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
 
     private val events = mutableListOf<Event>()
     private val attendees = mutableListOf<Attendee>()
+    private val attendances = mutableListOf<Attendance>()
     private var dbError = false
 
     fun returnDbError(value: Boolean){
@@ -64,5 +65,28 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
             else
                 emit(OperationStatus.Error<List<Attendee>>(message = "Error"))
         }
+    }
+
+    override suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>> {
+        return flow {
+            if (!dbError)
+                emit(OperationStatus.Success(attendances as List<Attendance>))
+            else
+                emit(OperationStatus.Error<List<Attendance>>(message = "Error"))
+        }
+    }
+
+    override suspend fun getAttendanceByAttendee(
+        eventId: Int,
+        attendeeName: String
+    ): Flow<OperationStatus<List<Attendance>>> {
+        return getAllAttendance(eventId)
+    }
+
+    override suspend fun getAttendanceByDate(
+        eventId: Int,
+        day: String
+    ): Flow<OperationStatus<List<Attendance>>> {
+        return getAllAttendance(eventId)
     }
 }
