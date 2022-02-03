@@ -28,6 +28,7 @@ interface AttendanceMainRepository {
 
     suspend fun getAttendanceByDate(eventId: Int, day: String): Flow<OperationStatus<List<Attendance>>>
 
+    suspend fun getAuthStatus(): Flow<String>
 
 
 

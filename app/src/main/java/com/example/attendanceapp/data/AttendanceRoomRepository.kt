@@ -10,96 +10,115 @@ import com.example.attendanceapp.domain.repository.Authenticator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Authenticator): AttendanceMainRepository {
-   override suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>> = flow{
-        try {
-            authenticator.signInWithEmailAndPassword(email, password)
-            emit(OperationStatus.Success(data = "Login successful"))
-        }catch (e: Exception){
+class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Authenticator) :
+    AttendanceMainRepository {
+    override suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>> =
+        flow {
+            try {
+                authenticator.signInWithEmailAndPassword(email, password)
+                emit(OperationStatus.Success(data = "Login successful"))
+            } catch (e: Exception) {
 
-            emit(OperationStatus.Error<String>(message = e.toString()))
+                emit(OperationStatus.Error<String>(message = e.toString()))
+            }
+        }
+
+    override suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>> =
+        flow {
+            try {
+                authenticator.signUpWithEmailAndPassword(email, password)
+                emit(OperationStatus.Success(data = "Login successful"))
+            } catch (e: Exception) {
+
+                emit(OperationStatus.Error<String>(message = e.toString()))
+            }
+        }
+
+    override suspend fun getAuthStatus(): Flow<String> {
+        return try {
+            authenticator.getAuthStatus()
+        } catch (e: Exception) {
+            flow {
+                emit("Error")
+            }
         }
     }
 
-    override suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>> = flow{
-        try {
-            authenticator.signUpWithEmailAndPassword(email, password)
-            emit(OperationStatus.Success(data = "Login successful"))
-        }catch (e: Exception){
-
-            emit(OperationStatus.Error<String>(message = e.toString()))
-        }
-    }
-
-    override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>>  = flow{
+    override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>> = flow {
         try {
             dao.insertEvent(event.eventToEventEntity())
-             emit(OperationStatus.Success("record added"))
+            emit(OperationStatus.Success("record added"))
 
-        }catch (e: Exception){
-            emit(OperationStatus.Error("",message = e.toString()))
+        } catch (e: Exception) {
+            emit(OperationStatus.Error("", message = e.toString()))
         }
     }
 
-    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = flow{
+    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = flow {
         try {
             dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
             emit(OperationStatus.Success("record added"))
 
-        }catch (e: Exception){
-            emit(OperationStatus.Error("",message = e.toString()))
+        } catch (e: Exception) {
+            emit(OperationStatus.Error("", message = e.toString()))
         }
     }
 
-    override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>>  = flow{
-        try {
-            dao.insertAttendance(attendees.map { it.attendanceToAttendanceEntity() })
-            emit(OperationStatus.Success("records added"))
+    override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>> =
+        flow {
+            try {
+                dao.insertAttendance(attendees.map { it.attendanceToAttendanceEntity() })
+                emit(OperationStatus.Success("records added"))
 
-        }catch (e: Exception){
-            emit(OperationStatus.Error<String>(message = e.toString()))
+            } catch (e: Exception) {
+                emit(OperationStatus.Error<String>(message = e.toString()))
+            }
         }
-    }
 
-    override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>>  = flow{
+    override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>> = flow {
         try {
             val events = dao.getEvents().map { it.eventEntityToEvent() }
             emit(OperationStatus.Success(events))
 
-        }catch (e: Exception){
-           emit(OperationStatus.Error<List<Event>>(message = e.toString()))
+        } catch (e: Exception) {
+            emit(OperationStatus.Error<List<Event>>(message = e.toString()))
         }
     }
 
-    override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> = flow{
-        try {
-            val attendees = dao.getAttendeeByEvent(eventId).map { it.AttendeeEntityToAttendee() }
-            emit(OperationStatus.Success(attendees))
+    override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> =
+        flow {
+            try {
+                val attendees =
+                    dao.getAttendeeByEvent(eventId).map { it.AttendeeEntityToAttendee() }
+                emit(OperationStatus.Success(attendees))
 
-        }catch (e: Exception){
-            emit(OperationStatus.Error<List<Attendee>>(message = e.toString()))
+            } catch (e: Exception) {
+                emit(OperationStatus.Error<List<Attendee>>(message = e.toString()))
+            }
         }
-    }
 
-    override suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>> = flow{
-        try {
-            val attendees = dao.getAllAttendance(eventId).map { it.attendanceEntityToAttendance() }
-            emit(OperationStatus.Success(attendees))
+    override suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>> =
+        flow {
+            try {
+                val attendees =
+                    dao.getAllAttendance(eventId).map { it.attendanceEntityToAttendance() }
+                emit(OperationStatus.Success(attendees))
 
-        }catch (e: Exception){
-            emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
+            } catch (e: Exception) {
+                emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
+            }
         }
-    }
 
     override suspend fun getAttendanceByAttendee(
         eventId: Int,
         attendeeName: String
-    ): Flow<OperationStatus<List<Attendance>>> = flow{
+    ): Flow<OperationStatus<List<Attendance>>> = flow {
         try {
-            val attendees = dao.getAttendanceByAttendee(attendeeName, eventId).map { it.attendanceEntityToAttendance() }
+            val attendees = dao.getAttendanceByAttendee(attendeeName, eventId)
+                .map { it.attendanceEntityToAttendance() }
             emit(OperationStatus.Success(attendees))
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
         }
     }
@@ -107,12 +126,13 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
     override suspend fun getAttendanceByDate(
         eventId: Int,
         day: String
-    ): Flow<OperationStatus<List<Attendance>>> = flow{
+    ): Flow<OperationStatus<List<Attendance>>> = flow {
         try {
-            val attendees = dao.getAttendanceByDay(day, eventId).map { it.attendanceEntityToAttendance() }
+            val attendees =
+                dao.getAttendanceByDay(day, eventId).map { it.attendanceEntityToAttendance() }
             emit(OperationStatus.Success(attendees))
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
         }
     }
