@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/eventListFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/eventListFragment"
@@ -36,4 +36,25 @@
         android:name="com.example.attendanceapp.presentation.check_attendance.CheckAttendanceFragment"
         android:label="fragment_check_attendance"
         tools:layout="@layout/fragment_check_attendance" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.attendanceapp.presentation.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_eventListFragment"
+            app:destination="@id/eventListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.attendanceapp.presentation.register.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_eventListFragment"
+            app:destination="@id/eventListFragment" />
+    </fragment>
 </navigation>
