@@ -17,7 +17,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
             emit(OperationStatus.Success(data = "Login successful"))
         }catch (e: Exception){
 
-            emit(OperationStatus.Error(message = e.toString()))
+            emit(OperationStatus.Error<String>(message = e.toString()))
         }
     }
 
@@ -27,7 +27,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
             emit(OperationStatus.Success(data = "Login successful"))
         }catch (e: Exception){
 
-            emit(OperationStatus.Error(message = e.toString()))
+            emit(OperationStatus.Error<String>(message = e.toString()))
         }
     }
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#fff</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_undraw_report_re_f5n5</item>
+
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.AttendanceApp</item>
+    </style>
+</resources>

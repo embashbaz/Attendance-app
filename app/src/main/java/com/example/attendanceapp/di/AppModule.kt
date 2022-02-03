@@ -31,7 +31,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticator(auth: FirebaseAuth) = FirebaseAuthenticator(auth)
+    fun provideAuthenticator(auth: FirebaseAuth): Authenticator = FirebaseAuthenticator(auth)
 
     @Provides
     @Singleton
