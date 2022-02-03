@@ -19,6 +19,24 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
         dbError = value
     }
 
+    override suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>> {
+        return flow {
+            if (!dbError)
+                emit(OperationStatus.Success("user logged in"))
+            else
+                emit(OperationStatus.Error("",message = "Error"))
+        }
+    }
+
+    override suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>> {
+       return flow {
+           if (!dbError)
+               emit(OperationStatus.Success("user added"))
+           else
+               emit(OperationStatus.Error("",message = "Error"))
+       }
+    }
+
     override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>> {
         return flow {
             events.add(event)
