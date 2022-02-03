@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface AttendanceMainRepository {
 
+    suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>>
+
+    suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>>
+
     suspend fun insertEvent(event: Event): Flow<OperationStatus<String>>
 
     suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>>

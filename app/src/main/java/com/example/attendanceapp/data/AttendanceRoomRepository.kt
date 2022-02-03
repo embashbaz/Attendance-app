@@ -6,10 +6,31 @@ import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
+import com.example.attendanceapp.domain.repository.Authenticator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AttendanceRoomRepository(val dao: AttendanceAppDao): AttendanceMainRepository {
+class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Authenticator): AttendanceMainRepository {
+   override suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>> = flow{
+        try {
+            authenticator.signInWithEmailAndPassword(email, password)
+            emit(OperationStatus.Success(data = "Login successful"))
+        }catch (e: Exception){
+
+            emit(OperationStatus.Error(message = e.toString()))
+        }
+    }
+
+    override suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>> = flow{
+        try {
+            authenticator.signUpWithEmailAndPassword(email, password)
+            emit(OperationStatus.Success(data = "Login successful"))
+        }catch (e: Exception){
+
+            emit(OperationStatus.Error(message = e.toString()))
+        }
+    }
+
     override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>>  = flow{
         try {
             dao.insertEvent(event.eventToEventEntity())
