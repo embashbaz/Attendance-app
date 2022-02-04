@@ -56,8 +56,8 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
 
     override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = flow {
         try {
-            dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
-            emit(OperationStatus.Success("record added"))
+            val recordId = dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
+            emit(OperationStatus.Success(data = recordId.toString()))
 
         } catch (e: Exception) {
             emit(OperationStatus.Error("", message = e.toString()))

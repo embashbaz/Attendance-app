@@ -13,7 +13,7 @@ import com.example.attendanceapp.domain.models.Attendance
 interface AttendanceAppDao {
 
     @Insert
-    fun insertAttendee(attendee: AttendeeEntity)
+    fun insertAttendee(attendee: AttendeeEntity): Long
 
     @Insert
     fun insertEvent(event: EventEntity)
