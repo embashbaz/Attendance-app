@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_eventDetailFragment_to_newAttendanceFragment"
             app:destination="@id/newAttendanceFragment" />
+        <action
+            android:id="@+id/action_eventDetailFragment_to_newAttendeeDialog2"
+            app:destination="@id/newAttendeeDialog2" />
     </fragment>
     <fragment
         android:id="@+id/newAttendanceFragment"
@@ -57,4 +60,8 @@
             android:id="@+id/action_registerFragment_to_eventListFragment"
             app:destination="@id/eventListFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/newAttendeeDialog2"
+        android:name="com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog"
+        android:label="NewAttendeeDialog" />
 </navigation>
