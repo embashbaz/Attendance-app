@@ -60,6 +60,8 @@ class CheckAttendanceFragment : Fragment() {
                 if (p0 != null) {
                     if (p0.isNotEmpty()) {
                         checkAttendanceViewModel.onQuery(p0.toString())
+                    }else{
+                        checkAttendanceViewModel.onQuery()
                     }
                 }
             }

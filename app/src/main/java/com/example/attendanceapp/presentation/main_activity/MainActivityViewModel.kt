@@ -14,6 +14,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(val checkAuth: CheckAuthStatus) : ViewModel(){
 
+
+    var RUN_FOR_THE_FIRST_TIME = true
+
+    init {
+
+    }
+
     private val _authFlowState = MutableSharedFlow<AuthState>(replay = 1)
     val authFlowState = _authFlowState.asSharedFlow()
 
@@ -21,25 +28,29 @@ class MainActivityViewModel @Inject constructor(val checkAuth: CheckAuthStatus) 
 
 
     fun checkAuthStatus(){
+
         viewModelScope.launch(Dispatchers.Main){
             checkAuth().collect {  result ->
-                if (result == "logged in"){
-                    resultIsReady = true
-                    _authFlowState.emit(AuthState.LoggedIn())
-                }else{
-                    _authFlowState.emit(AuthState.LoggedOut())
+                resultIsReady = true
+                if(!RUN_FOR_THE_FIRST_TIME)
+                    _authFlowState.emit(AuthState.DoNothing())
+                else{
+                    if (result == "logged in"){
+                        _authFlowState.emit(AuthState.LoggedIn())
+                    }else{
+                        _authFlowState.emit(AuthState.LoggedOut())
+                    }
+
                 }
+
 
             }
         }
     }
-
-
-
     sealed class AuthState {
         class LoggedIn : AuthState()
         class LoggedOut : AuthState()
-        class OpenRegistration: AuthState()
+        class DoNothing: AuthState()
 
     }
 }

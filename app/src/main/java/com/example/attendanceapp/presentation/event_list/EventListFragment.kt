@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentEventListBinding
 import com.example.attendanceapp.domain.models.Event
+import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import com.example.attendanceapp.presentation.new_event.NewEventDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,6 +23,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
     private lateinit var eventListFragmentBinding: FragmentEventListBinding
     private val eventListViewModel: EventListViewModel by viewModels()
+    val mainViewModel: MainActivityViewModel by activityViewModels()
     private lateinit var eventListAdapter: EventListAdapter
 
 
@@ -35,6 +38,8 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
         //getEvents()
         onNewEventFbClicked()
+        mainViewModel.RUN_FOR_THE_FIRST_TIME = false
+        mainViewModel.checkAuthStatus()
 
         return view
     }
@@ -97,6 +102,8 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
     }
 
+
+
     private fun setUpRecyclerView() {
         eventListFragmentBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         eventListFragmentBinding.recyclerView.adapter = eventListAdapter
@@ -105,5 +112,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
     override fun onDismissDialog(value: Boolean) {
         getEvents()
     }
+
+
 
 }

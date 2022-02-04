@@ -6,9 +6,12 @@ import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlowActivity
+import com.example.attendanceapp.presentation.event_list.EventListFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        mainViewModel.checkAuthStatus()
         waitForViewModel()
         handleNavigation()
 
@@ -58,6 +61,22 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val lsActiveFragments: List<Fragment> = supportFragmentManager.fragments
+        for (fragmentActive in lsActiveFragments) {
+            if (fragmentActive is NavHostFragment) {
+                val lsActiveSubFragments: List<Fragment> =
+                    fragmentActive.getChildFragmentManager().getFragments()
+                for (fragmentActiveSub in lsActiveSubFragments) {
+                    if (fragmentActiveSub is EventListFragment) {
+                        finish()
+                    }
+                }
             }
         }
     }

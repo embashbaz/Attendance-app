@@ -17,7 +17,7 @@ class CheckAttendanceViewModel @Inject constructor(private val getAttendance: Ge
     private val _attendanceState = MutableStateFlow(CheckAttendanceFragmentState())
     val attendanceState = _attendanceState.asStateFlow()
 
-    private val _attendanceUiEvent = MutableSharedFlow<AttendanceListUIEvent>(replay = 1)
+    private val _attendanceUiEvent = MutableSharedFlow<AttendanceListUIEvent>()
     val attendanceUiEvent = _attendanceUiEvent.asSharedFlow()
 
 
@@ -32,14 +32,14 @@ class CheckAttendanceViewModel @Inject constructor(private val getAttendance: Ge
                 eventId = eventId
             )
 
-            onQuery("")
+            onQuery()
         }
 
         fun getDate(date: String){
             onQuery(date)
             }
 
-        fun onQuery(query: String){
+        fun onQuery(query: String = ""){
             _attendanceState.value = attendanceState.value.copy(
                 isLoading = true
             )

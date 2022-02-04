@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.FragmentRegisterBinding
+import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +19,7 @@ class RegisterFragment : Fragment() {
 
     private lateinit var registrationBinding: FragmentRegisterBinding
     private val registrationViewModel: RegisterViewModel by viewModels()
+    val mainViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,11 +37,14 @@ class RegisterFragment : Fragment() {
     }
 
     private fun listenToRegisterBtClicked() {
-        registrationViewModel.register(
-            stringFromTl(registrationBinding.emailRegisterTl),
-            stringFromTl(registrationBinding.passwordRegisterTl),
-            stringFromTl(registrationBinding.confirmPasswordRegisterTl)
-        )
+        registrationBinding.registerBt.setOnClickListener {
+            registrationViewModel.register(
+                stringFromTl(registrationBinding.emailRegisterTl),
+                stringFromTl(registrationBinding.passwordRegisterTl),
+                stringFromTl(registrationBinding.confirmPasswordRegisterTl)
+            )
+            mainViewModel.checkAuthStatus()
+        }
     }
 
     private fun collectLatestUIEVent(){

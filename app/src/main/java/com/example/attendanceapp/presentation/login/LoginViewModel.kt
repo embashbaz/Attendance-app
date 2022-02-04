@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.use_case.Login
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(val loginUseCase: Login): ViewModel(){
 
     private val _loginState = MutableStateFlow(LoginFragmentUIState())
