@@ -12,14 +12,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(val checkAuth: CheckAuthStatus) : ViewModel(){
+class MainActivityViewModel @Inject constructor(val checkAuth: CheckAuthStatus) : ViewModel() {
 
 
     var RUN_FOR_THE_FIRST_TIME = true
-
-    init {
-
-    }
 
     private val _authFlowState = MutableSharedFlow<AuthState>(replay = 1)
     val authFlowState = _authFlowState.asSharedFlow()
@@ -27,30 +23,30 @@ class MainActivityViewModel @Inject constructor(val checkAuth: CheckAuthStatus) 
     var resultIsReady = false
 
 
-    fun checkAuthStatus(){
+    fun checkAuthStatus() {
 
-        viewModelScope.launch(Dispatchers.Main){
-            checkAuth().collect {  result ->
-                resultIsReady = true
-                if(!RUN_FOR_THE_FIRST_TIME)
+        viewModelScope.launch(Dispatchers.Main) {
+            checkAuth().collect { result ->
+
+                if (!RUN_FOR_THE_FIRST_TIME)
                     _authFlowState.emit(AuthState.DoNothing())
-                else{
-                    if (result == "logged in"){
+                else {
+                    if (result == "logged in") {
                         _authFlowState.emit(AuthState.LoggedIn())
-                    }else{
+                    } else {
                         _authFlowState.emit(AuthState.LoggedOut())
                     }
 
                 }
-
-
+                ///resultIsReady = true
             }
         }
     }
+
     sealed class AuthState {
         class LoggedIn : AuthState()
         class LoggedOut : AuthState()
-        class DoNothing: AuthState()
+        class DoNothing : AuthState()
 
     }
 }

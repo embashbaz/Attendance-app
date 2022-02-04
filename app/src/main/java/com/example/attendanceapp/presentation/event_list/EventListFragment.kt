@@ -1,9 +1,11 @@
 package com.example.attendanceapp.presentation.event_list
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,6 +19,7 @@ import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import com.example.attendanceapp.presentation.new_event.NewEventDialog
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
@@ -113,6 +116,19 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         getEvents()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(
+            true // default to enabled
+        ) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this, // LifecycleOwner
+            callback);
 
+    }
 
 }
