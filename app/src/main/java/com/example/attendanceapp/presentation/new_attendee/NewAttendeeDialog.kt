@@ -2,9 +2,11 @@ package com.example.attendanceapp.presentation.new_attendee
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -17,6 +19,7 @@ import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.NewAttendeeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
 
 
 @AndroidEntryPoint
@@ -51,14 +54,34 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
     }
 
     private fun listenToImageClick() {
+
         newAttendeeDialogBinding.attendeeImg.setOnClickListener {
             dispatchTakePictureIntent()
         }
     }
 
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            inContext.getContentResolver(),
+            inImage,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
+    }
+
 
     private fun getUiDataInput() {
-        newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl))
+
+        if(imageBitmap != null){
+            val imageUri = getImageUri(requireContext(), imageBitmap!!)
+            if (imageUri != null){
+                newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl), imageUri)
+            }
+        }
+
         collectAddingNewAttendeeResults()
     }
 

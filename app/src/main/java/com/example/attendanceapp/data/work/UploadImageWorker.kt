@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
@@ -14,6 +15,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.ByteArrayOutputStream
 
+@HiltWorker
 class UploadImageWorker @AssistedInject constructor(
     @Assisted val appContext: Context,
     @Assisted val workerParams: WorkerParameters,
@@ -47,7 +49,7 @@ class UploadImageWorker @AssistedInject constructor(
 
         val url = imageRef.downloadUrl
 
-        val output: Data  = workDataOf(Constants.RECORD_URL to url, Constants.RECORD_ID_KEY to recordId)
+        val output: Data  = workDataOf(Constants.RECORD_IMAGE_URL to url, Constants.RECORD_ID_KEY to recordId)
 
         return Result.success(output)
         // }

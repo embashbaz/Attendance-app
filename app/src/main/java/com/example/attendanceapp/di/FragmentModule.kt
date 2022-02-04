@@ -1,7 +1,6 @@
 package com.example.attendanceapp.di
 
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
-import com.example.attendanceapp.domain.use_case.AddAttendee
 import com.example.attendanceapp.domain.use_case.AddEvent
 import com.example.attendanceapp.domain.use_case.GetAllEventParticipant
 import com.example.attendanceapp.domain.use_case.GetAllEvents
@@ -14,10 +13,7 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 object FragmentModule {
 
-    @Provides
-    fun provideAddAttendee(repository: AttendanceMainRepository): AddAttendee{
-        return AddAttendee(repository)
-    }
+
 
     @Provides
     fun provideAddEvent(repository: AttendanceMainRepository): AddEvent {
