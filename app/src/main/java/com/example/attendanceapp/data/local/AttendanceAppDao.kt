@@ -19,7 +19,11 @@ interface AttendanceAppDao {
     fun insertEvent(event: EventEntity)
 
     @Insert
-    fun insertAttendance(attendees: List<AttendanceEntity> )
+    fun insertAttendance(attendees: List<AttendanceEntity>)
+
+    @Query("UPDATE AttendeeEntity SET pictureId = :urlLink WHERE personDbId =:id")
+    fun update(urlLink: String, id: Int)
+
 
     @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY day DESC")
     fun getAttendanceByEvent(eventId: Int): List<Attendance>

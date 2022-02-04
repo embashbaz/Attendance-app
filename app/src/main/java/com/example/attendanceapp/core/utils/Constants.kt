@@ -5,7 +5,7 @@ object Constants {
     const val EVENT_ID_KEY = "event_key"
     const val IMAGE_KEY = "image_key"
     const val RECORD_ID_KEY = "record_id_key"
-    const val RECORD_URL= "image_url"
+    const val RECORD_IMAGE_URL= "image_url"
 
 
 }

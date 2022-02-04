@@ -75,6 +75,21 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
             }
         }
 
+    override suspend fun updateAttendee(
+        attendeeUrl: String,
+        attendeeId: Int
+    ): Flow<OperationStatus<String>> {
+        return flow {
+            try {
+                dao.update(attendeeUrl, attendeeId)
+                emit(OperationStatus.Success("records updated"))
+
+            } catch (e: Exception) {
+                emit(OperationStatus.Error<String>(message = e.toString()))
+            }
+        }
+    }
+
     override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>> = flow {
         try {
             val events = dao.getEvents().map { it.eventEntityToEvent() }

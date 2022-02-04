@@ -47,7 +47,7 @@ class UploadImageWorker @AssistedInject constructor(
 
         val url = imageRef.downloadUrl
 
-        val output: Data  = workDataOf(Constants.RECORD_URL to url)
+        val output: Data  = workDataOf(Constants.RECORD_URL to url, Constants.RECORD_ID_KEY to recordId)
 
         return Result.success(output)
         // }

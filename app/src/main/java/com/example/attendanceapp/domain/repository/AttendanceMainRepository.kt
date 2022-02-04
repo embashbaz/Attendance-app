@@ -16,6 +16,8 @@ interface AttendanceMainRepository {
 
     suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>>
 
+    suspend fun updateAttendee(attendeeUrl: String, attendeeId: Int): Flow<OperationStatus<String>>
+
     suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>>
 
     suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>>
