@@ -21,8 +21,6 @@ class AddNewAttendeeWorker @AssistedInject constructor(
     )
     : CoroutineWorker(appContext, workerParams)  {
 
-
-
     override suspend fun doWork(): Result {
         val name = inputData.getString(Constants.NAME_KEY)
         val eventId = inputData.getInt(Constants.EVENT_ID_KEY, 0)

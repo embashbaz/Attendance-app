@@ -10,6 +10,8 @@ import androidx.work.Data
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.example.attendanceapp.core.utils.Constants
+import com.example.attendanceapp.core.utils.ui.makeStatusNotification
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.storage.FirebaseStorage
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -21,6 +23,7 @@ class UploadImageWorker @AssistedInject constructor(
     @Assisted val workerParams: WorkerParameters,
     val storage: FirebaseStorage
 ) : CoroutineWorker(appContext, workerParams) {
+
 
     override suspend fun doWork(): Result {
 
@@ -42,30 +45,21 @@ class UploadImageWorker @AssistedInject constructor(
 
         var imageRef = storage.reference.child("attendance/${eventId}/${recordId}.jpg")
 
-        var uploadTask = imageRef.putBytes(data).snapshot
+        var uploadTask = imageRef.putBytes(data)
+        val taskResult = Tasks.await(uploadTask)
 
+        var progress = (100.0 * taskResult.bytesTransferred) / taskResult.totalByteCount
+        makeStatusNotification("upload at: $progress", appContext)
 
-        var progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
+        val downloadUriTask = Tasks.await(imageRef.downloadUrl)
+        val url = downloadUriTask.toString()
 
-        val url = imageRef.downloadUrl
-
-        val output: Data  = workDataOf(Constants.RECORD_IMAGE_URL to url, Constants.RECORD_ID_KEY to recordId)
+        val output: Data =
+            workDataOf(Constants.RECORD_IMAGE_URL to url, Constants.RECORD_ID_KEY to recordId)
 
         return Result.success(output)
-        // }
 
 
-//        try {
-//            imageRef.putBytes(data).addOnProgressListener { uploadTask ->
-//                var progress = (100.0 * uploadTask.bytesTransferred) / uploadTask.totalByteCount
-//                //makeStatusNotification("$progress % complete", appContext)
-//            }
-//
-//
-//
-//        } catch (e: Exception) {
-//            Log.d("WORKER: ", e.toString())
-//        }
     }
 
 

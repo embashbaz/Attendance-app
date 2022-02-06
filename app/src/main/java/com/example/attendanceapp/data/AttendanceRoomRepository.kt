@@ -8,6 +8,7 @@ import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
 import com.example.attendanceapp.domain.repository.Authenticator
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 
 class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Authenticator) :
@@ -54,13 +55,13 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
         }
     }
 
-    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = flow {
+    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = channelFlow {
         try {
             val recordId = dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
-            emit(OperationStatus.Success(data = recordId.toString()))
+            send(OperationStatus.Success(data = recordId.toString()))
 
         } catch (e: Exception) {
-            emit(OperationStatus.Error("", message = e.toString()))
+            send(OperationStatus.Error("", message = e.toString()))
         }
     }
 
@@ -79,13 +80,13 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
         attendeeUrl: String,
         attendeeId: Int
     ): Flow<OperationStatus<String>> {
-        return flow {
+        return channelFlow{
             try {
                 dao.update(attendeeUrl, attendeeId)
-                emit(OperationStatus.Success("records updated"))
+                send(OperationStatus.Success("records updated"))
 
             } catch (e: Exception) {
-                emit(OperationStatus.Error<String>(message = e.toString()))
+                send(OperationStatus.Error<String>(message = e.toString()))
             }
         }
     }

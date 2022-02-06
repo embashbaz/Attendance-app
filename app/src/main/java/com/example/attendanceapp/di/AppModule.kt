@@ -2,6 +2,7 @@ package com.example.attendanceapp.di
 
 import android.app.Application
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.example.attendanceapp.data.AttendanceRoomRepository
 import com.example.attendanceapp.data.local.AttendanceAppDatabase
 import com.example.attendanceapp.data.remote.FirebaseAuthenticator
@@ -37,6 +38,10 @@ object AppModule {
     fun provideAddAttendee(repository: AttendanceMainRepository): AddAttendee {
         return AddAttendee(repository)
     }
+
+    @Singleton
+    @Provides
+    fun provideWorkManager(application: Application) = WorkManager.getInstance(application)
 
     @Singleton
     @Provides

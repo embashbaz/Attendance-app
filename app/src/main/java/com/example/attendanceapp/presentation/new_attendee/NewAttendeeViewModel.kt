@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 @HiltViewModel
-class NewAttendeeViewModel @Inject constructor(private val addAttendee: AddAttendee) :
+class NewAttendeeViewModel @Inject constructor(private val addAttendee: AddAttendee, private val workManager : WorkManager) :
     ViewModel() {
 
     private val _addNewAttendeeState = MutableStateFlow(NewAttendeeDialogState())
@@ -46,9 +46,9 @@ class NewAttendeeViewModel @Inject constructor(private val addAttendee: AddAtten
 
         val updateImageValue = OneTimeWorkRequestBuilder<UpdateNewAttendeeWorker>().build()
 
-        WorkManager.getInstance()
+        workManager
             .beginWith(saveRecord)
-            .then(saveImage)    // FYI, then() returns a new WorkContinuation instance
+            .then(saveImage)
             .then(updateImageValue)
             .enqueue()
 

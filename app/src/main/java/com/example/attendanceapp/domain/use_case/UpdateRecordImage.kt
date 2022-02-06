@@ -9,13 +9,13 @@ import javax.inject.Inject
 class UpdateRecordImage @Inject constructor(val repo: AttendanceMainRepository){
 
     suspend operator fun invoke(personId: Int, url: String): Flow<OperationStatus<String>> {
-            if (personId > 0){
+            if (personId < 1){
                 return flow {
                     emit(OperationStatus.Error(message = "Error id was null"))
                 }
             }
 
-             if (url.isNotBlank()){
+             if (url.isBlank()){
                  return flow {
                      emit(OperationStatus.Error(message = "An url was not returned"))
                  }
