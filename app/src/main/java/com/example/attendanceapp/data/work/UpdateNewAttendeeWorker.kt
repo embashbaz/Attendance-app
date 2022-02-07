@@ -3,7 +3,9 @@ package com.example.attendanceapp.data.work
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.example.attendanceapp.core.utils.Constants
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.core.utils.ui.makeStatusNotification
@@ -22,19 +24,26 @@ class UpdateNewAttendeeWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val recordId = inputData.getInt(Constants.RECORD_ID_KEY, 0)
         val imageUrl = inputData.getString(Constants.RECORD_IMAGE_URL)
-
+        var resultText = ""
         try {
             val result = updateRecordImage(recordId, imageUrl ?: "").first()
+
             if (result is OperationStatus.Success){
                makeStatusNotification("Record added", appContext)
+                resultText = "success"
             }else if (result is OperationStatus.Error){
-                makeStatusNotification("Error ${result.message}", appContext)
+                resultText = "Error ${result.message}"
+                makeStatusNotification(resultText, appContext)
             }
         }catch (e: Exception){
-            makeStatusNotification("Error $e", appContext)
+            resultText = "Error $e"
+            makeStatusNotification(resultText, appContext)
         }
 
-        return Result.success()
+        val output: Data =
+            workDataOf(Constants.UPDATE_IMAGE_RESULT to resultText)
+
+        return Result.success(output)
 
     }
 
