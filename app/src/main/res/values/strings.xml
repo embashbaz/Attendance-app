@@ -6,7 +6,5 @@
     <string-array name="event_type">
         <item>Event</item>
         <item>Class</item>
-
-
     </string-array>
 </resources>
