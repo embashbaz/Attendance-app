@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/attendee_item.xml" value="0.18" />
         <entry key="app/src/main/res/layout/dropdown_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/event_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_camera_attendance.xml" value="0.1621376811594203" />
         <entry key="app/src/main/res/layout/fragment_check_attendance.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_event_detail.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_event_list.xml" value="0.22" />

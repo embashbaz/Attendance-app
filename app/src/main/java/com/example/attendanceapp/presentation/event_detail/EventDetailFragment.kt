@@ -53,6 +53,11 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
             this.findNavController().navigate(R.id.action_eventDetailFragment_to_checkAttendanceFragment, bundle)
         }
 
+        eventDetailBinding.button2.setOnClickListener {
+
+            this.findNavController().navigate(R.id.action_eventDetailFragment_to_cameraAttendanceFragment)
+
+        }
 
         return view
     }

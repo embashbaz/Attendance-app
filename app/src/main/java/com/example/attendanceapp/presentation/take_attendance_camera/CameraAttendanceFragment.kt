@@ -1,6 +1,5 @@
 package com.example.attendanceapp.presentation.take_attendance_camera
 
-import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +9,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.attendanceapp.core.utils.ui.showLongToast
-import com.example.attendanceapp.databinding.FragmentCameraAttendanceLandBinding
+import com.example.attendanceapp.databinding.FragmentCameraAttendanceBinding
 import com.example.attendanceapp.presentation.take_attendance_camera.camerax.CameraManager
-import kotlinx.android.synthetic.main.fragment_camera_attendance_land.*
 
 
 class CameraAttendanceFragment : Fragment() {
 
-    private lateinit var fragmentCameraAttendanceBinding: FragmentCameraAttendanceLandBinding
+    private lateinit var fragmentCameraAttendanceBinding: FragmentCameraAttendanceBinding
     private lateinit var cameraManager: CameraManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().setRequestedOrientation(SCREEN_ORIENTATION_LANDSCAPE)
+
     }
 
     override fun onCreateView(
@@ -31,8 +29,7 @@ class CameraAttendanceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
-        fragmentCameraAttendanceBinding = FragmentCameraAttendanceLandBinding.inflate(inflater, container, false)
+        fragmentCameraAttendanceBinding = FragmentCameraAttendanceBinding.inflate(inflater, container, false)
         val view = fragmentCameraAttendanceBinding.root
         createCameraManager()
         checkForPermission()
@@ -73,15 +70,17 @@ class CameraAttendanceFragment : Fragment() {
     private fun createCameraManager() {
         cameraManager = CameraManager(
             requireContext(),
-            previewView_finder,
+            fragmentCameraAttendanceBinding.previewViewFinder!!,
             this,
-            graphicOverlay_finder
+            fragmentCameraAttendanceBinding.graphicOverlayFinder!!
         )
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(requireActivity(), it) == PackageManager.PERMISSION_GRANTED
     }
+
+
 
     companion object {
         private const val REQUEST_CODE_PERMISSIONS = 10

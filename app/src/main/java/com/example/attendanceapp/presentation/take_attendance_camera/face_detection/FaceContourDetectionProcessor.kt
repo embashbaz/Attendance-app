@@ -14,6 +14,8 @@ import java.io.IOException
 class FaceContourDetectionProcessor(private val view: GraphicOverlay) :
     BaseImageAnalyzer<List<Face>>() {
 
+    internal lateinit var mostfacesListener: MostFacesListener
+
     private val realTimeOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
         .setContourMode(FaceDetectorOptions.CONTOUR_MODE_NONE)
@@ -47,16 +49,16 @@ class FaceContourDetectionProcessor(private val view: GraphicOverlay) :
         rect: Rect
     ) {
         graphicOverlay.clear()
-        if (results.size > maxNumberOfObject){
-            maxNumberOfObject = results.size
-            imageWithMostFaces = currentImage
-        }
 
         results.forEach {
             val faceGraphic = FaceContourGraphic(graphicOverlay, it, rect)
             graphicOverlay.add(faceGraphic)
         }
         graphicOverlay.postInvalidate()
+       if (results.size > maxNumberOfObject){
+           maxNumberOfObject = results.size
+            imageWithMostFaces = currentImage
+       }
     }
 
     override fun onFailure(e: Exception) {
@@ -65,6 +67,15 @@ class FaceContourDetectionProcessor(private val view: GraphicOverlay) :
 
     companion object {
         private const val TAG = "FaceDetectorProcessor"
+    }
+
+    fun setListener(listener: MostFacesListener ) {
+        mostfacesListener = listener
+    }
+
+    interface MostFacesListener {
+        fun numberOfFaces(num: Int)
+        fun imageMostPeople(image: InputImage)
     }
 
 }

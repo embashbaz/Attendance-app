@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_eventDetailFragment_to_newAttendeeDialog2"
             app:destination="@id/newAttendeeDialog2" />
+        <action
+            android:id="@+id/action_eventDetailFragment_to_cameraAttendanceFragment"
+            app:destination="@id/cameraAttendanceFragment" />
     </fragment>
     <fragment
         android:id="@+id/newAttendanceFragment"
@@ -64,4 +67,9 @@
         android:id="@+id/newAttendeeDialog2"
         android:name="com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog"
         android:label="NewAttendeeDialog" />
+    <fragment
+        android:id="@+id/cameraAttendanceFragment"
+        android:name="com.example.attendanceapp.presentation.take_attendance_camera.CameraAttendanceFragment"
+        android:label="fragment_camera_attendance"
+        tools:layout="@layout/fragment_camera_attendance" />
 </navigation>
