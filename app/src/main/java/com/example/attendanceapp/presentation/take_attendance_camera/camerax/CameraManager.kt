@@ -2,7 +2,6 @@ package com.example.attendanceapp.presentation.take_attendance_camera.camerax
 
 import android.content.Context
 import android.util.Log
-import android.view.ScaleGestureDetector
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -11,6 +10,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.example.attendanceapp.presentation.take_attendance_camera.face_detection.FaceContourDetectionProcessor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
