@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -53,6 +54,10 @@ class UploadImageWorker @AssistedInject constructor(
 
         val downloadUriTask = Tasks.await(imageRef.downloadUrl)
         val url = downloadUriTask.toString()
+        val baseurl = downloadUriTask.pathSegments
+        for(item in baseurl){
+            Log.d("PATH SEGMENT: ", item)
+        }
 
         val output: Data =
             workDataOf(Constants.RECORD_IMAGE_URL to url, Constants.RECORD_ID_KEY to recordId)

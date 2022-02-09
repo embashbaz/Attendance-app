@@ -11,10 +11,8 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import java.io.IOException
 
-class FaceContourDetectionProcessor(private val view: GraphicOverlay) :
+class FaceContourDetectionProcessor(private val view: GraphicOverlay,private val mostfacesListener: MostFacesListener) :
     BaseImageAnalyzer<List<Face>>() {
-
-    internal lateinit var mostfacesListener: MostFacesListener
 
     private val realTimeOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
@@ -58,6 +56,8 @@ class FaceContourDetectionProcessor(private val view: GraphicOverlay) :
        if (results.size > maxNumberOfObject){
            maxNumberOfObject = results.size
             imageWithMostFaces = currentImage
+           mostfacesListener.imageMostPeople(imageWithMostFaces!!)
+           mostfacesListener.numberOfFaces(maxNumberOfObject)
        }
     }
 
@@ -69,9 +69,7 @@ class FaceContourDetectionProcessor(private val view: GraphicOverlay) :
         private const val TAG = "FaceDetectorProcessor"
     }
 
-    fun setListener(listener: MostFacesListener ) {
-        mostfacesListener = listener
-    }
+
 
     interface MostFacesListener {
         fun numberOfFaces(num: Int)

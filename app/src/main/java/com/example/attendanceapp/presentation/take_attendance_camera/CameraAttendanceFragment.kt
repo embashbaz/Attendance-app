@@ -1,7 +1,9 @@
 package com.example.attendanceapp.presentation.take_attendance_camera
 
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +13,11 @@ import androidx.fragment.app.Fragment
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.databinding.FragmentCameraAttendanceBinding
 import com.example.attendanceapp.presentation.take_attendance_camera.camerax.CameraManager
+import com.example.attendanceapp.presentation.take_attendance_camera.face_detection.FaceContourDetectionProcessor
+import com.google.mlkit.vision.common.InputImage
 
 
-class CameraAttendanceFragment : Fragment() {
+class CameraAttendanceFragment : Fragment(), FaceContourDetectionProcessor.MostFacesListener {
 
     private lateinit var fragmentCameraAttendanceBinding: FragmentCameraAttendanceBinding
     private lateinit var cameraManager: CameraManager
@@ -33,6 +37,7 @@ class CameraAttendanceFragment : Fragment() {
         val view = fragmentCameraAttendanceBinding.root
         createCameraManager()
         checkForPermission()
+
 
         // Inflate the layout for this fragment
         return view
@@ -72,7 +77,10 @@ class CameraAttendanceFragment : Fragment() {
             requireContext(),
             fragmentCameraAttendanceBinding.previewViewFinder!!,
             this,
-            fragmentCameraAttendanceBinding.graphicOverlayFinder!!
+            fragmentCameraAttendanceBinding.graphicOverlayFinder!!,
+            this
+
+
         )
     }
 
@@ -85,6 +93,16 @@ class CameraAttendanceFragment : Fragment() {
     companion object {
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun numberOfFaces(num: Int) {
+        Log.d("NUMBER OF ATTENDEE: ", num.toString())
+      showLongToast("number of people $num")
+    }
+
+    override fun imageMostPeople(image: InputImage) {
+
     }
 
 
