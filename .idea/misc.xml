@@ -16,7 +16,7 @@
         <entry key="app/src/main/res/layout/fragment_check_attendance.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_event_detail.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_event_list.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.17582417582417584" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_new_attendance.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.18" />
         <entry key="app/src/main/res/layout/new_attendee.xml" value="0.1" />
