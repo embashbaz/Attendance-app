@@ -38,7 +38,7 @@ class MainActivityViewModel @Inject constructor(val checkAuth: CheckAuthStatus) 
                     }
 
                 }
-                resultIsReady = true
+                //resultIsReady = true
             }
         }
     }

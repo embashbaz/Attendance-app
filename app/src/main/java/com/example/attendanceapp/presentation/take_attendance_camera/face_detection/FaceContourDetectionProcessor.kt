@@ -56,6 +56,8 @@ class FaceContourDetectionProcessor(private val view: GraphicOverlay,private val
        if (results.size > maxNumberOfObject){
            maxNumberOfObject = results.size
             imageWithMostFaces = currentImage
+           //getBitmap
+          // imageWithMostFaces.bitmapInte
            mostfacesListener.imageMostPeople(imageWithMostFaces!!)
            mostfacesListener.numberOfFaces(maxNumberOfObject)
        }
