@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentEventListBinding
@@ -36,7 +37,8 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
     ): View? {
         eventListFragmentBinding = FragmentEventListBinding.inflate(inflater, container, false)
         val view = eventListFragmentBinding.root
-        eventListAdapter = EventListAdapter { item -> onEventClicked(item) }
+        eventListAdapter =
+            EventListAdapter { item, view, position -> onEventClicked(item, view, position) }
         setUpRecyclerView()
 
         //getEvents()
@@ -53,7 +55,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
     }
 
     private fun onNewEventFbClicked() {
-        eventListFragmentBinding.addEventBt.setOnClickListener{
+        eventListFragmentBinding.addEventBt.setOnClickListener {
             val newEventDialog = NewEventDialog()
             newEventDialog.setListener(this)
             newEventDialog.show(parentFragmentManager, "New Event")
@@ -62,11 +64,19 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         }
     }
 
-    private fun onEventClicked(item: Any) {
-        if(item is Event){
-            val bundle = Bundle()
-            bundle.putParcelable("event_clicked", item)
-            this.findNavController().navigate(R.id.action_eventListFragment_to_eventDetailFragment, bundle)
+    private fun onEventClicked(item: Any, view: View, position: Int) {
+
+        if (item is Event) {
+            val extra = FragmentNavigator.Extras.Builder()
+                .addSharedElement(view, ViewCompat.getTransitionName(view)!!)
+                .build()
+
+            val destination =
+                EventListFragmentDirections.actionEventListFragmentToEventDetailFragment(
+                    item,
+                    position
+                )
+            this.findNavController().navigate(destination, extra)
         }
 
     }
@@ -106,7 +116,6 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
     }
 
 
-
     private fun setUpRecyclerView() {
         eventListFragmentBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         eventListFragmentBinding.recyclerView.adapter = eventListAdapter
@@ -127,7 +136,8 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         }
         requireActivity().onBackPressedDispatcher.addCallback(
             this, // LifecycleOwner
-            callback);
+            callback
+        );
 
     }
 

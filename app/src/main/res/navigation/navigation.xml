@@ -31,6 +31,12 @@
         <action
             android:id="@+id/action_eventDetailFragment_to_cameraAttendanceFragment"
             app:destination="@id/cameraAttendanceFragment" />
+        <argument
+            android:name="event"
+            app:argType="com.example.attendanceapp.domain.models.Event" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/newAttendanceFragment"

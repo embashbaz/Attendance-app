@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionInflater
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.databinding.FragmentEventDetailBinding
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +26,16 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
     private lateinit var genericAttendeeAdapter: GenericAttendeeAdapter
     private var eventId = -1
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            duration = 500
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,9 +44,13 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
         eventDetailBinding = FragmentEventDetailBinding.inflate(inflater, container, false)
         val view = eventDetailBinding.root
 
-        if(arguments?.getParcelable<Event>("event_clicked") != null){
-            eventDetailViewModel.setEventObject(requireArguments().getParcelable<Event>("event_clicked")!!)
-        }
+        val position =EventDetailFragmentArgs.fromBundle(requireArguments()).position
+        ViewCompat.setTransitionName(eventDetailBinding.cardViewEventDetails, "event_${position}")
+
+            eventDetailViewModel.setEventObject(EventDetailFragmentArgs.fromBundle(requireArguments()).event)
+
+
+
         genericAttendeeAdapter = GenericAttendeeAdapter { attendee -> onAttendeeClicked(attendee) }
         setUpRecyclerView()
         collectEventDetailInfo()
