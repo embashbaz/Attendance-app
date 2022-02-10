@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.databinding.AttendeeItemBinding
 import com.example.attendanceapp.domain.models.Attendee
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
 
 class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
@@ -44,6 +46,7 @@ class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
                 attendeeItemBinding.presentCheckBox.visibility = View.VISIBLE
                 attendeeItemBinding.attendeeIdTxt.setText(item.personDbId.toString())
                 attendeeItemBinding.attendeeNameTxt.setText(item.name)
+                Glide.with(attendeeItemBinding.root).load(item.pictureId).apply(RequestOptions.circleCropTransform()).into(attendeeItemBinding.attendeeImgListItem)
 
             }
 

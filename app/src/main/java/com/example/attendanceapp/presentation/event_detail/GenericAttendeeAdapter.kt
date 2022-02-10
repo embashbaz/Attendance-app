@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.attendanceapp.databinding.AttendeeItemBinding
 import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
@@ -46,11 +48,19 @@ class GenericAttendeeAdapter (onClick: (Any) -> Unit) :
                 attendeeItemBinding.presentCheckBox.visibility = View.INVISIBLE
                 attendeeItemBinding.attendeeIdTxt.setText(item.personDbId.toString())
                 attendeeItemBinding.attendeeNameTxt.setText(item.name)
+                if (item.pictureId.isNotBlank()){
+                    Glide.with(attendeeItemBinding.root).load(item.pictureId).apply(RequestOptions.circleCropTransform()).into(attendeeItemBinding.attendeeImgListItem)
+                }
+
 
             }else if(item is Attendance){
                 attendeeItemBinding.presentCheckBox.visibility = View.INVISIBLE
                 attendeeItemBinding.attendeeIdTxt.setText(item.attendeeName)
                 attendeeItemBinding.attendeeNameTxt.setText("${item.day} / ${item.time}")
+                attendeeItemBinding.attendeeImgListItem.visibility = View.GONE
+                attendeeItemBinding.attendeeImgListItem.layoutParams.width = 1
+                attendeeItemBinding.attendeeImgListItem.layoutParams.height = 1
+
             }
 
         }
