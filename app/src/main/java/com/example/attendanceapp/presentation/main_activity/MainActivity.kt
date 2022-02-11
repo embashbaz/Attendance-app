@@ -2,6 +2,7 @@ package com.example.attendanceapp.presentation.main_activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.viewModels
@@ -37,8 +38,11 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         mainViewModel.checkAuthStatus()
-        waitForViewModel()
-        handleNavigation()
+       // waitForViewModel()
+
+        Handler().postDelayed({
+            handleNavigation()
+        }, 3500)
         //android:theme="@android:style/Theme.Light"
         //android:theme="@style/Theme.App.Starting"
     }
