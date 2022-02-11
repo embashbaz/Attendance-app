@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.attendanceapp.R
@@ -18,16 +19,26 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     val mainViewModel: MainActivityViewModel by viewModels()
+    private lateinit var navController : NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        navController = findNavController(R.id.myNavHostFragment)
+
+        navController.navigate(R.id.splashFragment)
+
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         mainViewModel.checkAuthStatus()
         waitForViewModel()
         handleNavigation()
-
-
+        //android:theme="@android:style/Theme.Light"
     }
 
     fun waitForViewModel() {
@@ -50,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun handleNavigation() {
-        val navController = findNavController(R.id.myNavHostFragment)
+
         collectLatestLifecycleFlowActivity(mainViewModel.authFlowState) { result ->
             when (result) {
                 is MainActivityViewModel.AuthState.LoggedIn -> {

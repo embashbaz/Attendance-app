@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/eventListFragment"
@@ -78,4 +78,16 @@
         android:name="com.example.attendanceapp.presentation.take_attendance_camera.CameraAttendanceFragment"
         android:label="fragment_camera_attendance"
         tools:layout="@layout/fragment_camera_attendance" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.attendanceapp.presentation.splash_screen.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_eventListFragment"
+            app:destination="@id/eventListFragment" />
+    </fragment>
 </navigation>

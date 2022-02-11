@@ -58,6 +58,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         eventListFragmentBinding.addEventBt.setOnClickListener {
             val newEventDialog = NewEventDialog()
             newEventDialog.setListener(this)
+
             newEventDialog.show(parentFragmentManager, "New Event")
 
 
@@ -135,7 +136,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
-            this, // LifecycleOwner
+            this,
             callback
         );
 
