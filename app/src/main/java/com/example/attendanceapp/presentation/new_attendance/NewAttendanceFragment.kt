@@ -55,11 +55,14 @@ class NewAttendanceFragment : Fragment() {
             NewAttendanceAdapter(object : NewAttendanceAdapter.OnItemCheckListener {
                 override fun onItemCheck(item: Any) {
                     newAttendanceViewModel.addItemToAttendance(item as Attendee)
+
                 }
 
                 override fun onItemUncheck(item: Any) {
                     newAttendanceViewModel.removeItemToAttendance(item as Attendee)
+
                 }
+
 
             })
     }
@@ -68,6 +71,10 @@ class NewAttendanceFragment : Fragment() {
         collectLatestLifecycleFlow(newAttendanceViewModel.newAttendanceState) { data ->
             if (data.allParticipants.isNotEmpty()) {
                 newAttendanceAdapter.setData(data.allParticipants)
+            }
+
+            if(data.checkedParticipants.isNotEmpty()){
+                newAttendanceBinding.attendeePresentTxt.text =" ${data.checkedParticipants.size} people are present"
             }
         }
 

@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         waitForViewModel()
         handleNavigation()
         //android:theme="@android:style/Theme.Light"
+        //android:theme="@style/Theme.App.Starting"
     }
 
     fun waitForViewModel() {

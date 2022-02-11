@@ -21,19 +21,22 @@
         tools:listitem="@layout/attendee_item" />
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
+        android:background="#81FFFFFF"
+        android:backgroundTint="#28292222"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/attendee_present_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -48,6 +51,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="Save Attendance"
+            android:textAllCaps="false"
+            app:cornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/new_attend_menu"
+        android:icon="@drawable/ic_baseline_edit_note_24"
+        android:title="New attandence"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/take_attend_cam_menu"
+        android:title="Take attendance using the camera" />
+    <item
+        android:id="@+id/check_att_menu"
+        android:title="Check attendance" />
+</menu>
