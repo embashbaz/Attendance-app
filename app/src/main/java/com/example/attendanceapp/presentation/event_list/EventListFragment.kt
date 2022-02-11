@@ -2,9 +2,7 @@ package com.example.attendanceapp.presentation.event_list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -13,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentEventListBinding
@@ -38,6 +37,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
     ): View? {
         eventListFragmentBinding = FragmentEventListBinding.inflate(inflater, container, false)
         (activity as MainActivity).setActionBarTitle("Events and Classes")
+        setHasOptionsMenu(true)
         val view = eventListFragmentBinding.root
         eventListAdapter =
             EventListAdapter { item, view, position -> onEventClicked(item, view, position) }
@@ -105,6 +105,10 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
             }
 
+            if (state.logOut){
+                mainViewModel.RUN_FOR_THE_FIRST_TIME = true
+            }
+
         }
     }
 
@@ -142,6 +146,21 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
             callback
         );
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.event_list_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.logout_menu){
+            eventListViewModel.signOut()
+            //mainViewModel.checkAuthStatus()
+        }
+
+
+        return super.onOptionsItemSelected(item)
     }
 
 }

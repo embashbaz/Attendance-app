@@ -4,6 +4,7 @@ import com.example.attendanceapp.domain.repository.AttendanceMainRepository
 import com.example.attendanceapp.domain.use_case.AddEvent
 import com.example.attendanceapp.domain.use_case.GetAllEventParticipant
 import com.example.attendanceapp.domain.use_case.GetAllEvents
+import com.example.attendanceapp.domain.use_case.SignOut
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,11 @@ object FragmentModule {
     @Provides
     fun provideGetAllEvents(repository: AttendanceMainRepository): GetAllEvents {
         return GetAllEvents(repository)
+    }
+
+    @Provides
+    fun provideSignOut(repository: AttendanceMainRepository): SignOut{
+        return SignOut(repository)
     }
 
 }

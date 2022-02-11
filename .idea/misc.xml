@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/layout/new_attendee.xml" value="0.1" />
         <entry key="app/src/main/res/layout/new_event_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/menu/event_detail_menu.xml" value="0.22135416666666666" />
+        <entry key="app/src/main/res/menu/event_list_menu.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/menu/event_type_menu.xml" value="0.190625" />
       </map>
     </option>

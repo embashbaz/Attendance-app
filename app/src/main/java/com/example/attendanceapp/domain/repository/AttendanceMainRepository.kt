@@ -32,6 +32,7 @@ interface AttendanceMainRepository {
 
     suspend fun getAuthStatus(): Flow<String>
 
+    suspend fun logout(): Flow<OperationStatus<String>>
 
 
 

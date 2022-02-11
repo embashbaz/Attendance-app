@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.use_case.GetAllEvents
+import com.example.attendanceapp.domain.use_case.SignOut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EventListViewModel @Inject constructor(private val getAllEventUC: GetAllEvents) :
+class EventListViewModel @Inject constructor(private val getAllEventUC: GetAllEvents, private val logOut: SignOut) :
     ViewModel() {
 
     private val _eventListState = MutableStateFlow(EventListFragmentState())
@@ -58,6 +59,35 @@ class EventListViewModel @Inject constructor(private val getAllEventUC: GetAllEv
 
         }
 
+    }
+
+    fun signOut(){
+        viewModelScope.launch(Dispatchers.IO){
+            logOut().collect {  result ->
+                when(result){
+                    is OperationStatus.Success -> {
+
+                        _eventListState.value = eventListState.value.copy(
+                            logOut = true
+                        )
+                        _eventListUIEvent.emit(
+                            EventListUIEvent.ShowSnackBar("signed out")
+                        )
+
+                    }
+
+                    is OperationStatus.Error -> {
+                        _eventListUIEvent.emit(
+                            EventListUIEvent.ShowSnackBar(
+                                result.message ?: "An error occurred"
+                            )
+                        )
+
+                    }
+
+                }
+            }
+        }
     }
 
 

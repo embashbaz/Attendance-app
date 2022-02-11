@@ -1,5 +1,6 @@
 package com.example.attendanceapp.data
 
+import android.util.Log
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.data.local.AttendanceAppDao
 import com.example.attendanceapp.domain.models.Attendance
@@ -150,6 +151,17 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
 
         } catch (e: Exception) {
             emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
+        }
+    }
+
+    override suspend fun logout(): Flow<OperationStatus<String>> = flow {
+        try {
+            authenticator.logout()
+            emit(OperationStatus.Success("Success"))
+        } catch (e: Exception) {
+
+            Log.d("Error: ", e.toString())
+            emit(OperationStatus.Error<String>(message = e.toString()))
         }
     }
 }
