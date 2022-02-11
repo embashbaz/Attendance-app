@@ -17,6 +17,7 @@ import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentEventListBinding
 import com.example.attendanceapp.domain.models.Event
+import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import com.example.attendanceapp.presentation.new_event.NewEventDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +37,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         savedInstanceState: Bundle?
     ): View? {
         eventListFragmentBinding = FragmentEventListBinding.inflate(inflater, container, false)
+        (activity as MainActivity).setActionBarTitle("Events and Classes")
         val view = eventListFragmentBinding.root
         eventListAdapter =
             EventListAdapter { item, view, position -> onEventClicked(item, view, position) }

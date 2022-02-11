@@ -11,6 +11,7 @@ import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.FragmentRegisterBinding
+import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +26,7 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        (activity as MainActivity).setActionBarTitle("Sign up")
         registrationBinding = FragmentRegisterBinding.inflate(inflater, container, false)
         val view = registrationBinding.root
 

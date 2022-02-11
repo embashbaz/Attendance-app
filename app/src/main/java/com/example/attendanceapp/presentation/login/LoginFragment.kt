@@ -13,6 +13,7 @@ import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.FragmentLoginBinding
+import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +29,7 @@ class LoginFragment : Fragment() {
     ): View? {
         loginFragmentBinding =  FragmentLoginBinding.inflate(inflater,container, false)
         val view = loginFragmentBinding.root
+        (activity as MainActivity).setActionBarTitle("Sign in")
 
 
         listenToLoginButtonClicked()

@@ -13,6 +13,7 @@ import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.databinding.FragmentNewAttendanceBinding
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
+import com.example.attendanceapp.presentation.main_activity.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -27,6 +28,8 @@ class NewAttendanceFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        (activity as MainActivity).setActionBarTitle("Record attendance")
 
         newAttendanceBinding = FragmentNewAttendanceBinding.inflate(inflater, container, false)
         val view = newAttendanceBinding.root

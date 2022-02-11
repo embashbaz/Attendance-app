@@ -15,6 +15,7 @@ import com.example.attendanceapp.core.utils.getDateFromLong
 import com.example.attendanceapp.core.utils.ui.showLongSnackBar
 import com.example.attendanceapp.databinding.FragmentCheckAttendanceBinding
 import com.example.attendanceapp.presentation.event_detail.GenericAttendeeAdapter
+import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +31,7 @@ class CheckAttendanceFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as MainActivity).setActionBarTitle("Check attendance")
         checkAttendanceBinding = FragmentCheckAttendanceBinding.inflate(inflater, container, false)
         val view = checkAttendanceBinding.root
 

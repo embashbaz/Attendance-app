@@ -15,6 +15,7 @@ import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlowActivity
 import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -77,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun setActionBarTitle(title: String?) {
+        Objects.requireNonNull(supportActionBar)?.title = title
     }
 
 

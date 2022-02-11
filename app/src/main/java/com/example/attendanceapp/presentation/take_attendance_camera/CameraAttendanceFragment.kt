@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -48,6 +49,7 @@ class CameraAttendanceFragment : Fragment(), FaceContourDetectionProcessor.MostF
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
 
         fragmentCameraAttendanceBinding = FragmentCameraAttendanceBinding.inflate(inflater, container, false)
         val view = fragmentCameraAttendanceBinding.root
@@ -203,7 +205,8 @@ class CameraAttendanceFragment : Fragment(), FaceContourDetectionProcessor.MostF
             }
     }
 
-
-
-
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+    }
 }

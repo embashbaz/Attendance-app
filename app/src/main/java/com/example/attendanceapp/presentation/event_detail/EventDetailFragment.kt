@@ -12,6 +12,7 @@ import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.databinding.FragmentEventDetailBinding
 import com.example.attendanceapp.domain.models.Event
+import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +41,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
     ): View? {
 
         setHasOptionsMenu(true)
+        (activity as MainActivity).setActionBarTitle("Event detail")
 
         eventDetailBinding = FragmentEventDetailBinding.inflate(inflater, container, false)
         val view = eventDetailBinding.root

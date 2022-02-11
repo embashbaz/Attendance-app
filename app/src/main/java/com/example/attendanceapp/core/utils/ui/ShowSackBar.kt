@@ -16,4 +16,4 @@ fun Fragment.showLongToast(message: String){
     Toast.makeText(this.activity, message, Toast.LENGTH_LONG).show()
 }
 
-fun stringFromTl(tl: TextInputLayout) = tl.editText!!.text.toString()
+
