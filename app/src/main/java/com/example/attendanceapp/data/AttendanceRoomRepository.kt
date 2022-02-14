@@ -17,10 +17,8 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
     override suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>> =
         flow {
             try {
-                authenticator.signInWithEmailAndPassword(email, password)
-                emit(OperationStatus.Success(data = "Login successful"))
+                emit(authenticator.signInWithEmailAndPassword(email, password))
             } catch (e: Exception) {
-
                 emit(OperationStatus.Error<String>(message = e.toString()))
             }
         }
@@ -28,8 +26,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
     override suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>> =
         flow {
             try {
-                authenticator.signUpWithEmailAndPassword(email, password)
-                emit(OperationStatus.Success(data = "Login successful"))
+                emit(authenticator.signUpWithEmailAndPassword(email, password))
             } catch (e: Exception) {
 
                 emit(OperationStatus.Error<String>(message = e.toString()))
@@ -49,8 +46,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
     override suspend fun forgotPassword(email: String): Flow<OperationStatus<String>> =
         flow {
             try {
-                authenticator.forgotPassword(email)
-                emit(OperationStatus.Success(data = "reset password link sent"))
+                emit(authenticator.forgotPassword(email))
             } catch (e: Exception) {
 
                 emit(OperationStatus.Error<String>(message = e.toString()))
@@ -168,8 +164,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
 
     override suspend fun logout(): Flow<OperationStatus<String>> = flow {
         try {
-            authenticator.logout()
-            emit(OperationStatus.Success("Success"))
+            emit(authenticator.logout())
         } catch (e: Exception) {
 
             Log.d("Error: ", e.toString())

@@ -1,5 +1,6 @@
 package com.example.attendanceapp.data.remote
 
+import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.repository.Authenticator
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,14 +13,25 @@ import javax.inject.Inject
 class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: FirebaseAuth) :
     Authenticator {
 
-    override suspend fun signUpWithEmailAndPassword(email: String, password: String) {
-        mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+    override suspend fun signUpWithEmailAndPassword(email: String, password: String): OperationStatus<String> {OperationStatus.Success("Success")
+
+
+        try {
+            mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+            return OperationStatus.Success("success")
+        }catch (e: Exception){
+            return OperationStatus.Error(message = e.toString())
+        }
 
     }
 
-    override suspend fun signInWithEmailAndPassword(email: String, password: String) {
-
-        mFirebaseAuth.signInWithEmailAndPassword(email, password)
+    override suspend fun signInWithEmailAndPassword(email: String, password: String) : OperationStatus<String>  {
+        try {
+            mFirebaseAuth.signInWithEmailAndPassword(email, password)
+            return OperationStatus.Success("success")
+        }catch (e: Exception){
+            return OperationStatus.Error(message = e.toString())
+        }
 
     }
 
@@ -43,11 +55,22 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
 
     }
 
-    override suspend fun forgotPassword(email: String) {
-        mFirebaseAuth.sendPasswordResetEmail(email)
+    override suspend fun forgotPassword(email: String): OperationStatus<String>  {
+
+        try {
+            mFirebaseAuth.sendPasswordResetEmail(email)
+            return OperationStatus.Success("success")
+        }catch (e: Exception){
+            return OperationStatus.Error(message = e.toString())
+        }
     }
 
-    override suspend fun logout(){
-        mFirebaseAuth.signOut()
+    override suspend fun logout(): OperationStatus<String> {
+           try {
+            mFirebaseAuth.signOut()
+            return OperationStatus.Success("success")
+        }catch (e: Exception){
+            return OperationStatus.Error(message = e.toString())
+        }
     }
 }
