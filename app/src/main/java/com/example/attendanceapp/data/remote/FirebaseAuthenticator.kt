@@ -28,7 +28,17 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
     override suspend fun signInWithEmailAndPassword(email: String, password: String) : OperationStatus<String>  {
         try {
             mFirebaseAuth.signInWithEmailAndPassword(email, password)
+                .continueWith {
+                    if (it.isSuccessful){
+                       // return OperationStatus.Success("success")
+                    }else {
+
+                    }
+
+
+                }
             return OperationStatus.Success("success")
+
         }catch (e: Exception){
             return OperationStatus.Error(message = e.toString())
         }

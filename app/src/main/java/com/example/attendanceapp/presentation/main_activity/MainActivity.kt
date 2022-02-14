@@ -3,15 +3,14 @@ package com.example.attendanceapp.presentation.main_activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
-import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlowActivity
 import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
@@ -22,12 +21,14 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     val mainViewModel: MainActivityViewModel by viewModels()
     private lateinit var navController : NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        navController = findNavController(R.id.myNavHostFragment)
+        setupNavigation()
 
         navController.navigate(R.id.splashFragment)
 
@@ -47,31 +48,23 @@ class MainActivity : AppCompatActivity() {
         //android:theme="@style/Theme.App.Starting"
     }
 
-    fun waitForViewModel() {
-        val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    // Check if the initial data is ready.
-                    return if (mainViewModel.resultIsReady) {
-                        // The content is ready; start drawing.
-                        content.viewTreeObserver.removeOnPreDrawListener(this)
-                        true
-                    } else {
-                        // The content is not ready; suspend.
-                        false
-                    }
-                }
-            }
-        )
+    private fun setupNavigation() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment?
+        navController = navHostFragment!!.navController
+        appBarConfiguration = AppBarConfiguration.Builder(setOf(R.id.registerFragment,R.id.eventDetailFragment,R.id.checkAttendanceFragment, R.id.newAttendanceFragment)).build()
+       // NavigationUI.setupWithNavController(bottomNavigation,navController)
+        NavigationUI.setupActionBarWithNavController(this,navController)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
     fun handleNavigation() {
 
         collectLatestLifecycleFlowActivity(mainViewModel.authFlowState) { result ->
             when (result) {
                 is MainActivityViewModel.AuthState.LoggedIn -> {
-                    navController.navigate(R.id.eventListFragment)
+                    navController.navigate(R.id.action_splashFragment_to_eventListFragment)
                     mainViewModel.resultIsReady = true
                 }
 

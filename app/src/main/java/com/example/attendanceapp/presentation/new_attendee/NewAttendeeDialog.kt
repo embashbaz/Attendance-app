@@ -6,10 +6,14 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +26,7 @@ import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.NewAttendeeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 @AndroidEntryPoint
@@ -31,6 +36,7 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
     internal lateinit var newAttendeeDialogListener: NewAttendeeDialogListener
     val REQUEST_IMAGE_CAPTURE = 1
     private var imageBitmap: Bitmap? = null
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +92,47 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
             "Title",
             null
         )
-        return Uri.parse(path)
+        imageUri = Uri.parse(path)
+
+        return imageUri
+    }
+
+    fun deleteFileAfterUpload(){
+        if (imageUri!= null){
+            try {
+              //  File(getRealPathFromUri(requireContext(),imageUri)).getAbsoluteFile().delete()
+                    Log.d("IMAGE ==", imageUri.toString())
+               // requireContext().contentResolver .delete(Uri.parse(getRealPathFromUri(requireContext(),imageUri)), null,null)
+
+                //Environment.getExternal
+
+                val fDelete = File(getRealPathFromUri(requireContext(),imageUri))
+                if (fDelete.exists()) {
+                    if (fDelete.delete()) {
+                        MediaScannerConnection.scanFile(requireContext(), arrayOf(Environment.getExternalStorageDirectory().toString()), null) { path, uri ->
+                            Log.d("debug", "DONE")
+                        }
+                    }
+                }
+            }catch (e: Exception){
+                Log.e("DELETING PICTURE: ",e.toString())
+            }
+        }
+    }
+
+    fun getRealPathFromUri(context: Context, contentUri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            if (cursor != null) {
+                cursor.close()
+            }
+        }
     }
 
 
@@ -106,7 +152,8 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
         collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeEvent){ result ->
             if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.DismissDialog)
                 if (result.value){
-                    dismiss()
+                    deleteFileAfterUpload()
+                    //dismiss()
                 }
             if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.ShowToast){
                 showLongToast(result.message)
