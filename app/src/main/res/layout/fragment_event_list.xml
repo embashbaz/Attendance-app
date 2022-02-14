@@ -29,10 +29,12 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:foregroundTint="@color/white"
+        android:tint="@color/white"
         android:foregroundTintMode="add"
         android:src="@drawable/ic_baseline_add_24"
-        android:tint="@color/white"
+
         android:tintMode="src_in"
+        app:tint="@color/white"
         app:backgroundTint="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

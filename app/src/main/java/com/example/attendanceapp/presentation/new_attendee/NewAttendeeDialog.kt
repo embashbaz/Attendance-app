@@ -143,6 +143,8 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
             if (imageUri != null){
                 newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl), imageUri)
             }
+        }else{
+            newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl), null)
         }
 
         collectAddingNewAttendeeResults()

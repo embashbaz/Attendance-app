@@ -2,24 +2,29 @@ package com.example.attendanceapp.presentation.new_attendee
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.attendanceapp.core.utils.Constants
+import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.data.work.AddNewAttendeeWorker
 import com.example.attendanceapp.data.work.UpdateNewAttendeeWorker
 import com.example.attendanceapp.data.work.UploadImageWorker
 import com.example.attendanceapp.domain.use_case.AddAttendee
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+
 @HiltViewModel
-class NewAttendeeViewModel @Inject constructor(private val addAttendee: AddAttendee, private val workManager : WorkManager) :
+class NewAttendeeViewModel @Inject constructor(
+    private val addAttendee: AddAttendee,
+    private val workManager: WorkManager
+) :
     ViewModel() {
 
     private val _addNewAttendeeState = MutableStateFlow(NewAttendeeDialogState())
@@ -38,64 +43,68 @@ class NewAttendeeViewModel @Inject constructor(private val addAttendee: AddAtten
     }
 
 
-    fun addEventAttendee(eventId: Int, name: String, imageUri: Uri) {
 
-        val saveRecord = OneTimeWorkRequestBuilder<AddNewAttendeeWorker>()
-            .setInputData(createInputDataForUri(imageUri, eventId, name))
-            .build()
+    fun addEventAttendee(eventId: Int, name: String, imageUri: Uri?) {
 
-        val saveImage = OneTimeWorkRequestBuilder<UploadImageWorker>().build()
+        if (imageUri != null) {
+            val saveRecord = OneTimeWorkRequestBuilder<AddNewAttendeeWorker>()
+                .setInputData(createInputDataForUri(imageUri, eventId, name))
+                .build()
 
-        val updateImageValue = OneTimeWorkRequestBuilder<UpdateNewAttendeeWorker>().build()
+            val saveImage = OneTimeWorkRequestBuilder<UploadImageWorker>().build()
 
-        workManager
-            .beginWith(saveRecord)
-            .then(saveImage)
-            .then(updateImageValue)
-            .enqueue()
+            val updateImageValue = OneTimeWorkRequestBuilder<UpdateNewAttendeeWorker>().build()
+
+            workManager
+                .beginWith(saveRecord)
+                .then(saveImage)
+                .then(updateImageValue)
+                .enqueue()
 
 
             getAddingNewAttendeeResult(updateImageValue)
+        } else {
 
 
+            _addNewAttendeeState.value = addNewAttendeeState.value.copy(
+                isLoading = true
+            )
 
-//        _addNewAttendeeState.value = addNewAttendeeState.value.copy(
-//            isLoading = true
-//        )
-//
-//        viewModelScope.launch(Dispatchers.IO) {
-//            addAttendee(eventId, name, "").collect { result ->
-//                when (result) {
-//                    is OperationStatus.Success -> {
-//                        _addNewAttendeeState.value = addNewAttendeeState.value.copy(
-//                            isLoading = false,
-//                            isSuccess = true
-//                        )
-//
-//                        _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.ShowToast("Attendee added"))
-//                        _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.DismissDialog(true))
-//                    }
-//
-//                    is OperationStatus.Error -> {
-//                        _addNewAttendeeState.value = addNewAttendeeState.value.copy(
-//                            isLoading = false,
-//                            isError = true
-//                        )
-//                        _addNewAttendeeEvent.emit(
-//                            NewAttendeeDialogUIEvent.ShowToast(
-//                                result.message ?: "An error occurred"
-//                            )
-//                        )
-//                    }
-//                }
-//
-//            }
-//        }
+            viewModelScope.launch(Dispatchers.IO) {
+                addAttendee(eventId, name, "").collect { result ->
+                    when (result) {
+                        is OperationStatus.Success -> {
+                            _addNewAttendeeState.value = addNewAttendeeState.value.copy(
+                                isLoading = false,
+                                isSuccess = true
+                            )
+
+                            _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.ShowToast("Attendee added"))
+                            _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.DismissDialog(true))
+                        }
+
+                        is OperationStatus.Error -> {
+                            _addNewAttendeeState.value = addNewAttendeeState.value.copy(
+                                isLoading = false,
+                                isError = true
+                            )
+                            _addNewAttendeeEvent.emit(
+                                NewAttendeeDialogUIEvent.ShowToast(
+                                    result.message ?: "An error occurred"
+                                )
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
 
 
     }
 
-    fun getAddingNewAttendeeResult( updateImageValue: OneTimeWorkRequest){
+
+    fun getAddingNewAttendeeResult(updateImageValue: OneTimeWorkRequest) {
         workManager.getWorkInfoByIdLiveData(updateImageValue.id)
             .observeForever { info ->
                 if (info != null && info.state.isFinished) {
