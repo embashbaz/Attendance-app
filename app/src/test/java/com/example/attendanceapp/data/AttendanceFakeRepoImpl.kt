@@ -107,4 +107,24 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
     ): Flow<OperationStatus<List<Attendance>>> {
         return getAllAttendance(eventId)
     }
+
+
+    override suspend fun updateAttendee(
+        attendeeUrl: String,
+        attendeeId: Int
+    ): Flow<OperationStatus<String>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAuthStatus(): Flow<String> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun logout(): Flow<OperationStatus<String>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun forgotPassword(email: String): Flow<OperationStatus<String>> {
+        TODO("Not yet implemented")
+    }
 }

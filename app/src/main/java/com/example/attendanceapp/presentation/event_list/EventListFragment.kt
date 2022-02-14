@@ -2,6 +2,7 @@ package com.example.attendanceapp.presentation.event_list
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
@@ -116,6 +117,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         collectLatestLifecycleFlow(eventListViewModel.eventListUIEvent) { event ->
             if (event is EventListViewModel.EventListUIEvent.ShowSnackBar) {
                 showLongSnackBar(requireView(), event.message)
+                Log.d("Errrrrror: ",event.message)
             }
         }
 

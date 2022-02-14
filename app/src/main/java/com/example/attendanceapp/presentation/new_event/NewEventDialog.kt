@@ -56,7 +56,8 @@ class NewEventDialog : DialogFragment() {
     private fun getUiDataInput() {
         newEventViewModel.onAddEvent(
             stringFromTl(newEventDialogBinding.eventNameTl),
-            stringFromTl(newEventDialogBinding.eventTypeDropdown)
+            stringFromTl(newEventDialogBinding.eventTypeDropdown),
+            stringFromTl(newEventDialogBinding.newEventDescriptionTl)
         )
         collectAddingEventResult()
     }

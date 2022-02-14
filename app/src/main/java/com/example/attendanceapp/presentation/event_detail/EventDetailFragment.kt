@@ -73,6 +73,7 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
 
             eventDetailBinding.eventNameEventDetailsTxt.setText(data.eventObject.eventName)
             eventDetailBinding.eventTypeEventDetailsTxt.setText(data.eventObject.eventType)
+            eventDetailBinding.eventDescriptionDetail.setText(data.eventObject.description)
             eventObject = data.eventObject
 
             if (data.participants.isNotEmpty()){

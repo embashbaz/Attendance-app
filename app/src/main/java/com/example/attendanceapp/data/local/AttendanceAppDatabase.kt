@@ -8,7 +8,7 @@ import com.example.attendanceapp.data.local.entity.EventEntity
 
 @Database(
     entities = [AttendanceEntity::class, AttendeeEntity::class, EventEntity::class],
-    version = 1
+    version = 2
 )
 abstract class AttendanceAppDatabase: RoomDatabase()  {
     abstract val dao: AttendanceAppDao

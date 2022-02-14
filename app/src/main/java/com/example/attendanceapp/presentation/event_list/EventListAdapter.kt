@@ -53,6 +53,7 @@ class EventListAdapter (onClick: (Any, View, Int) -> Unit) :
             if (item is Event){
                 eventItemBinding.eventNameEventListTxt.setText(item.eventName)
                 eventItemBinding.eventTypeEventListTxt.setText(item.eventType)
+                eventItemBinding.eventDescriptionItem.setText(item.description)
             }
 
         }

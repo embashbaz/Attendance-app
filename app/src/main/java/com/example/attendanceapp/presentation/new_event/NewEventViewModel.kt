@@ -19,13 +19,13 @@ class NewEventViewModel @Inject constructor(private val addEvent: AddEvent) : Vi
     private val _screenEvent = MutableSharedFlow<UIEvent>(replay = 1)
     val screenEvent = _screenEvent.asSharedFlow()
 
-    fun onAddEvent(eventName: String, eventType: String) {
+    fun onAddEvent(eventName: String, eventType: String, description: String) {
 
         viewModelScope.launch(Dispatchers.IO) {
             _addEventState.value = addEventState.value.copy(
                isLoading = true
             )
-            addEvent(eventType, eventName).collect { result ->
+            addEvent(eventType, eventName, description).collect { result ->
                 when(result){
                     is OperationStatus.Success -> {
                         _addEventState.value = addEventState.value.copy(

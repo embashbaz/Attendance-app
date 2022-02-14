@@ -11,13 +11,15 @@ data class EventEntity (
         val eventType: String,
         val eventName: String,
         val ownerId: String,
+        val description: String
         ){
         fun eventEntityToEvent(): Event{
                 return Event(
                         eventId = eventId,
                         eventType = eventType,
                         ownerId = ownerId,
-                        eventName = eventName
+                        eventName = eventName,
+                        description = description
                 )
 
         }

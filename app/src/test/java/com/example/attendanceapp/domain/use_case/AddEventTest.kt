@@ -22,14 +22,14 @@ class AddEventTest {
 
     @Test
     fun `add event with blank type`() = runBlocking{
-        val response = addEvent("", "this").first()
+        val response = addEvent("", "this", "").first()
         assertThat(response.message).isEqualTo("Event type and event name can not be blank")
 
     }
 
     @Test
     fun `add event with blank name`() = runBlocking{
-        val response = addEvent("this", "").first()
+        val response = addEvent("this", "", "").first()
         assertThat(response.message).isEqualTo("Event type and event name can not be blank")
 
     }
@@ -37,7 +37,7 @@ class AddEventTest {
     @Test
     fun `add event with db error`()= runBlocking{
         repository.returnDbError(true)
-        val response = addEvent("this", "this").first()
+        val response = addEvent("this", "this", "").first()
         assertThat(response.message).isEqualTo("Error")
 
     }
@@ -45,7 +45,7 @@ class AddEventTest {
     @Test
     fun `add event successfully`()= runBlocking{
         repository.returnDbError(false)
-        val response = addEvent("this", "this").first()
+        val response = addEvent("this", "this", "").first()
         assertThat(response.data).isEqualTo("records added")
 
     }

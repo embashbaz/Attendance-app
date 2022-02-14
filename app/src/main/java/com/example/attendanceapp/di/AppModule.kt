@@ -64,6 +64,7 @@ object AppModule {
         return Room.databaseBuilder(
             app, AttendanceAppDatabase::class.java, "attendance_db"
         )
+            .fallbackToDestructiveMigration()
             .build()
     }
 }

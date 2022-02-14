@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         collectLatestLifecycleFlowActivity(mainViewModel.authFlowState) { result ->
             when (result) {
                 is MainActivityViewModel.AuthState.LoggedIn -> {
-                    navController.navigate(R.id.action_splashFragment_to_eventListFragment)
+                    navController.navigate(R.id.eventListFragment)
                     mainViewModel.resultIsReady = true
                 }
 
