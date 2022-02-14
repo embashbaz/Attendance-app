@@ -46,6 +46,18 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
         }
     }
 
+    override suspend fun forgotPassword(email: String): Flow<OperationStatus<String>> =
+        flow {
+            try {
+                authenticator.forgotPassword(email)
+                emit(OperationStatus.Success(data = "reset password link sent"))
+            } catch (e: Exception) {
+
+                emit(OperationStatus.Error<String>(message = e.toString()))
+            }
+
+    }
+
     override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>> = flow {
         try {
             dao.insertEvent(event.eventToEventEntity())

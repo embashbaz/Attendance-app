@@ -10,5 +10,7 @@ interface Authenticator {
 
     suspend fun getAuthStatus(): Flow<String>
 
+    suspend fun forgotPassword(email: String)
+
     suspend fun logout()
 }

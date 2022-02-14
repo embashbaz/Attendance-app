@@ -15,6 +15,7 @@ import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.FragmentLoginBinding
 import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
+import com.example.attendanceapp.presentation.reset_password_dialog.ResetPasswordDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,21 +34,40 @@ class LoginFragment : Fragment() {
 
 
         listenToLoginButtonClicked()
+        listenToForgotPasswordClicked()
         collectUIEvents()
+        collectUiState()
         listenToRegiterViewClicked()
         return view
+    }
+
+    private fun listenToForgotPasswordClicked() {
+
+        loginFragmentBinding.forgotPasswordTxt.setOnClickListener {
+            val dialog = ResetPasswordDialog()
+            dialog.show(parentFragmentManager, "Reset Dialog")
+        }
     }
 
     fun listenToLoginButtonClicked(){
         loginFragmentBinding.loginBt.setOnClickListener{
             loginViewModel.login(stringFromTl(loginFragmentBinding.emailLoginTl), stringFromTl(loginFragmentBinding.passwordLoginTl))
-            mainViewModel.checkAuthStatus()
+
         }
     }
 
     fun listenToRegiterViewClicked(){
         loginFragmentBinding.moveToRegisterBt.setOnClickListener {
             this.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+    }
+
+    private fun collectUiState(){
+        collectLatestLifecycleFlow(loginViewModel.loginState){ state ->
+            if (state.isSuccess){
+                mainViewModel.checkAuthStatus()
+            }
+
         }
     }
 

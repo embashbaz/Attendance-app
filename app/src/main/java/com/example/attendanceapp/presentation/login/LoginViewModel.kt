@@ -27,6 +27,12 @@ class LoginViewModel @Inject constructor(val loginUseCase: Login): ViewModel(){
                     is OperationStatus.Error -> {
                         _loginEvent.emit(LoginFragmentUIEvent.showSnackBar(result.message ?: "An error occurred"))
                     }
+
+                    is OperationStatus.Success -> {
+                        _loginState.value = loginState.value.copy(
+                            isSuccess = true
+                        )
+                    }
                 }
             }
         }

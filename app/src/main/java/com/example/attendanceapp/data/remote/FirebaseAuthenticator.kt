@@ -1,6 +1,5 @@
 package com.example.attendanceapp.data.remote
 
-import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.repository.Authenticator
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,6 +41,10 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
         }
 
 
+    }
+
+    override suspend fun forgotPassword(email: String) {
+        mFirebaseAuth.sendPasswordResetEmail(email)
     }
 
     override suspend fun logout(){

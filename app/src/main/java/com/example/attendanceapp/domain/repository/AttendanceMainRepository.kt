@@ -34,6 +34,8 @@ interface AttendanceMainRepository {
 
     suspend fun logout(): Flow<OperationStatus<String>>
 
+    suspend fun forgotPassword(email: String): Flow<OperationStatus<String>>
+
 
 
 }
