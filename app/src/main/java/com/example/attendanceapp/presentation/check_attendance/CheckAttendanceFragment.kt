@@ -6,6 +6,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,7 +41,7 @@ class CheckAttendanceFragment : Fragment() {
         checkAttendanceViewModel.setEventId(requireArguments().getInt("event_id"))
         setUpRecyclerView()
         listenToQuery()
-        onRadioButtonClicked()
+        setUpSelectQueryType()
 
         collectLatestUIState()
         collectLatestUIEvent()
@@ -62,7 +64,7 @@ class CheckAttendanceFragment : Fragment() {
                 if (p0 != null) {
                     if (p0.isNotEmpty()) {
                         checkAttendanceViewModel.onQuery(p0.toString())
-                    }else{
+                    } else {
                         checkAttendanceViewModel.onQuery()
                     }
                 }
@@ -77,27 +79,42 @@ class CheckAttendanceFragment : Fragment() {
 
     }
 
-    fun onRadioButtonClicked() {
+    private fun setUpSelectQueryType() {
 
+        val items = listOf("All", "Query by name", "Query by date")
+        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, items)
+        (checkAttendanceBinding.queryTypeTl.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        checkAttendanceBinding.radioGroupType.setOnCheckedChangeListener { radioGroup, i ->
-            when (i) {
-                R.id.query_by_name_bt -> {
-                    checkAttendanceViewModel.setType(1)
-                }
-
-                R.id.query_by_date_bt -> {
-                    checkAttendanceViewModel.setType(2)
-                }
-
-                R.id.all_attendance_bt -> {
-                    checkAttendanceViewModel.setType(0)
-                    checkAttendanceViewModel.onQuery("")
-                }
+        checkAttendanceBinding.queryTypeTl.editText!!.addTextChangedListener(object :
+            TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
-        }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0 != null) {
+                    if (p0.isNotEmpty()) {
+                        if (p0.toString() == "All") {
+                            checkAttendanceViewModel.setType(0)
+                            checkAttendanceViewModel.onQuery("")
+                        } else if (p0.toString() == "Query by name") {
+                            checkAttendanceViewModel.setType(1)
+                        } else if (p0.toString() == "Query by date") {
+                            checkAttendanceViewModel.setType(2)
+                        }
+
+                    } else {
+                        checkAttendanceViewModel.onQuery()
+                    }
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+
 
     }
 
@@ -139,7 +156,7 @@ class CheckAttendanceFragment : Fragment() {
 
             if (state.attendance.isNotEmpty()) {
                 genericAttendeeAdapter.setData(state.attendance)
-            }else{
+            } else {
                 showLongSnackBar(requireView(), "No data returned")
                 genericAttendeeAdapter.setData(emptyList())
             }

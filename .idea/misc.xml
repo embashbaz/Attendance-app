@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.228" />
+        <entry key="app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.228" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_undraw_report_re_f5n5.xml" value="0.1" />
         <entry key="app/src/main/res/layout-land/fragment_camera_attendance_land.xml" value="0.1" />

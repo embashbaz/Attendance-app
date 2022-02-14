@@ -22,33 +22,25 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
-            <RadioGroup
-                android:id="@+id/radioGroup_type"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/query_type_tl"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Query by"
+                app:layout_constraintEnd_toStartOf="@+id/cal_icon_img"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <RadioButton
-                    android:id="@+id/query_by_name_bt"
-                    android:layout_width="wrap_content"
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Query by attendee name"/>
+                    android:inputType="none" />
 
-                <RadioButton
-                    android:id="@+id/query_by_date_bt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Query by date"/>
-
-                <RadioButton
-                    android:id="@+id/all_attendance_bt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="All"/>
-
-            </RadioGroup>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/attendee_name_search_tl"
@@ -58,16 +50,16 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
+                android:hint="Person name"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/cal_icon_img"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup_type">
+                app:layout_constraintTop_toBottomOf="@+id/query_type_tl">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="hint" />
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,13 +67,11 @@
                 android:id="@+id/cal_icon_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="8dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/query_type_tl"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup_type"
+                app:layout_constraintTop_toTopOf="@+id/query_type_tl"
                 app:srcCompat="@drawable/ic_baseline_calendar_today_24" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
