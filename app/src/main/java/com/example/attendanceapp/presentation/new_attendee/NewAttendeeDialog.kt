@@ -1,6 +1,7 @@
 package com.example.attendanceapp.presentation.new_attendee
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
@@ -14,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
@@ -32,7 +34,18 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_Alert)
+        //setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_Alert)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val dialog: Dialog? = dialog
+        if (dialog != null) {
+            val width = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.MATCH_PARENT
+            dialog.getWindow()?.setLayout(width, height)
+        }
     }
 
     override fun onCreateView(
@@ -46,6 +59,10 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
         val view = newAttendeeDialogBinding.root
         newAttendeeDialogBinding.saveAttendeeBt.setOnClickListener {
             getUiDataInput()
+        }
+
+        newAttendeeDialogBinding.closeNewAttendeeBt.setOnClickListener {
+            dialog?.dismiss()
         }
 
         listenToImageClick()
