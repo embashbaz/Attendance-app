@@ -125,6 +125,11 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
     }
 
     override suspend fun forgotPassword(email: String): Flow<OperationStatus<String>> {
-        TODO("Not yet implemented")
+        return flow {
+            if (!dbError)
+                emit(OperationStatus.Success("email sent"))
+            else
+                emit(OperationStatus.Error("",message = "Error"))
+        }
     }
 }
