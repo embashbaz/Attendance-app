@@ -30,7 +30,7 @@ class NewAttendeeViewModel @Inject constructor(
     private val _addNewAttendeeState = MutableStateFlow(NewAttendeeDialogState())
     val addNewAttendeeState = _addNewAttendeeState.asStateFlow()
 
-    private val _addNewAttendeeEvent = MutableSharedFlow<NewAttendeeDialogUIEvent>()
+    private val _addNewAttendeeEvent = MutableSharedFlow<NewAttendeeDialogUIEvent>(replay = 1)
     val addNewAttendeeEvent = _addNewAttendeeEvent.asSharedFlow()
 
     fun createInputDataForUri(imageUri: Uri, eventId: Int, name: String): Data {
@@ -43,64 +43,78 @@ class NewAttendeeViewModel @Inject constructor(
     }
 
 
-
     fun addEventAttendee(eventId: Int, name: String, imageUri: Uri?) {
 
         if (imageUri != null) {
-            val saveRecord = OneTimeWorkRequestBuilder<AddNewAttendeeWorker>()
-                .setInputData(createInputDataForUri(imageUri, eventId, name))
-                .build()
-
-            val saveImage = OneTimeWorkRequestBuilder<UploadImageWorker>().build()
-
-            val updateImageValue = OneTimeWorkRequestBuilder<UpdateNewAttendeeWorker>().build()
-
-            workManager
-                .beginWith(saveRecord)
-                .then(saveImage)
-                .then(updateImageValue)
-                .enqueue()
-
-
-            getAddingNewAttendeeResult(updateImageValue)
+            addAttendeeWithImage(eventId, name, imageUri)
         } else {
+            addAttendeeWithoutAnImage(eventId, name)
 
-
-            _addNewAttendeeState.value = addNewAttendeeState.value.copy(
-                isLoading = true
-            )
-
-            viewModelScope.launch(Dispatchers.IO) {
-                addAttendee(eventId, name, "").collect { result ->
-                    when (result) {
-                        is OperationStatus.Success -> {
-                            _addNewAttendeeState.value = addNewAttendeeState.value.copy(
-                                isLoading = false,
-                                isSuccess = true
-                            )
-
-                            _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.ShowToast("Attendee added"))
-                            _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.DismissDialog(true))
-                        }
-
-                        is OperationStatus.Error -> {
-                            _addNewAttendeeState.value = addNewAttendeeState.value.copy(
-                                isLoading = false,
-                                isError = true
-                            )
-                            _addNewAttendeeEvent.emit(
-                                NewAttendeeDialogUIEvent.ShowToast(
-                                    result.message ?: "An error occurred"
-                                )
-                            )
-                        }
-                    }
-
-                }
-            }
         }
 
 
+    }
+
+    fun addAttendeeWithoutAnImage(eventId: Int, name: String) {
+        _addNewAttendeeState.value = addNewAttendeeState.value.copy(
+            isLoading = true
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            addAttendee(eventId, name, "").collect { result ->
+                when (result) {
+                    is OperationStatus.Success -> {
+                        addingAttendeeSuccessfull()
+                    }
+
+                    is OperationStatus.Error -> {
+                        addingAttendeeFailed(result.message)
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun addAttendeeWithImage(eventId: Int, name: String, imageUri: Uri?) {
+        val saveRecord = OneTimeWorkRequestBuilder<AddNewAttendeeWorker>()
+            .setInputData(createInputDataForUri(imageUri!!, eventId, name))
+            .build()
+
+        val saveImage = OneTimeWorkRequestBuilder<UploadImageWorker>().build()
+
+        val updateImageValue = OneTimeWorkRequestBuilder<UpdateNewAttendeeWorker>().build()
+
+        workManager
+            .beginWith(saveRecord)
+            .then(saveImage)
+            .then(updateImageValue)
+            .enqueue()
+
+
+        getAddingNewAttendeeResult(updateImageValue)
+    }
+
+    suspend fun addingAttendeeFailed(message: String?) {
+        _addNewAttendeeState.value = addNewAttendeeState.value.copy(
+            isLoading = false,
+            isError = true
+        )
+        _addNewAttendeeEvent.emit(
+            NewAttendeeDialogUIEvent.ShowToast(
+                message ?: "An error occurred"
+            )
+        )
+    }
+
+    suspend fun addingAttendeeSuccessfull() {
+        _addNewAttendeeState.value = addNewAttendeeState.value.copy(
+            isLoading = false,
+            isSuccess = true
+        )
+
+        _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.ShowToast("Attendee added"))
+        _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.DismissDialog(true))
     }
 
 
@@ -112,19 +126,10 @@ class NewAttendeeViewModel @Inject constructor(
                     if (myResult != null) {
                         runBlocking {
                             if (myResult == "success") {
+                                addingAttendeeSuccessfull()
 
-                                _addNewAttendeeEvent.emit(NewAttendeeDialogUIEvent.ShowToast("Attendee added"))
-                                _addNewAttendeeEvent.emit(
-                                    NewAttendeeDialogUIEvent.DismissDialog(
-                                        true
-                                    )
-                                )
                             } else if (myResult.contains("Error")) {
-                                _addNewAttendeeEvent.emit(
-                                    NewAttendeeDialogUIEvent.ShowToast(
-                                        myResult
-                                    )
-                                )
+                                addingAttendeeFailed(myResult)
                             }
 
 

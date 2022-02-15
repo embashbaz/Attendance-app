@@ -65,6 +65,7 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
         val view = newAttendeeDialogBinding.root
         newAttendeeDialogBinding.saveAttendeeBt.setOnClickListener {
             getUiDataInput()
+            newAttendeeDialogBinding.saveAttendeeBt.isEnabled = false
         }
 
         newAttendeeDialogBinding.closeNewAttendeeBt.setOnClickListener {
@@ -74,6 +75,14 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
         listenToImageClick()
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        collectAddingNewAttendeeEvent()
+        collectAddingNewAttendeeState()
+
     }
 
     private fun listenToImageClick() {
@@ -147,19 +156,31 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
             newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl), null)
         }
 
-        collectAddingNewAttendeeResults()
     }
 
-    private fun collectAddingNewAttendeeResults() {
+    private fun collectAddingNewAttendeeEvent() {
         collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeEvent){ result ->
             if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.DismissDialog)
                 if (result.value){
                     deleteFileAfterUpload()
-                    //dismiss()
+                    dismiss()
                 }
             if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.ShowToast){
                 showLongToast(result.message)
             }
+        }
+    }
+
+    private fun collectAddingNewAttendeeState(){
+        collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeState){ result ->
+            if (result.isSuccess){
+                newAttendeeDialogBinding.saveAttendeeBt.isEnabled = true
+            }
+
+            if (result.isError){
+                newAttendeeDialogBinding.saveAttendeeBt.isEnabled = true
+            }
+
         }
     }
 

@@ -68,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
+                android:padding="8dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/query_type_tl"
                 app:layout_constraintEnd_toEndOf="parent"
