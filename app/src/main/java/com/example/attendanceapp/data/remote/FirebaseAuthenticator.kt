@@ -2,6 +2,7 @@ package com.example.attendanceapp.data.remote
 
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.repository.Authenticator
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -17,7 +18,8 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
 
 
         try {
-            mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+            Tasks.await( mFirebaseAuth.createUserWithEmailAndPassword(email, password))
+
             return OperationStatus.Success("success")
         }catch (e: Exception){
             return OperationStatus.Error(message = e.toString())
@@ -27,20 +29,12 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String) : OperationStatus<String>  {
         try {
-            mFirebaseAuth.signInWithEmailAndPassword(email, password)
-                .continueWith {
-                    if (it.isSuccessful){
-                       // return OperationStatus.Success("success")
-                    }else {
-
-                    }
-
-
-                }
+           Tasks.await(mFirebaseAuth.signInWithEmailAndPassword(email, password))
             return OperationStatus.Success("success")
 
         }catch (e: Exception){
-            return OperationStatus.Error(message = e.toString())
+
+            return OperationStatus.Error(message = e.message.toString())
         }
 
     }
@@ -68,7 +62,7 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
     override suspend fun forgotPassword(email: String): OperationStatus<String>  {
 
         try {
-            mFirebaseAuth.sendPasswordResetEmail(email)
+            Tasks.await(mFirebaseAuth.sendPasswordResetEmail(email))
             return OperationStatus.Success("success")
         }catch (e: Exception){
             return OperationStatus.Error(message = e.toString())
@@ -77,7 +71,7 @@ class FirebaseAuthenticator @Inject constructor(private val mFirebaseAuth: Fireb
 
     override suspend fun logout(): OperationStatus<String> {
            try {
-            mFirebaseAuth.signOut()
+               mFirebaseAuth.signOut()
             return OperationStatus.Success("success")
         }catch (e: Exception){
             return OperationStatus.Error(message = e.toString())
