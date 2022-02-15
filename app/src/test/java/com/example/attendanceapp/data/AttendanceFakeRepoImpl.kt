@@ -8,14 +8,14 @@ import com.example.attendanceapp.domain.repository.AttendanceMainRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AttendanceFakeRepoImpl : AttendanceMainRepository{
+class AttendanceFakeRepoImpl : AttendanceMainRepository {
 
     private val events = mutableListOf<Event>()
     private val attendees = mutableListOf<Attendee>()
     private val attendances = mutableListOf<Attendance>()
     private var dbError = false
 
-    fun returnDbError(value: Boolean){
+    fun returnDbError(value: Boolean) {
         dbError = value
     }
 
@@ -24,26 +24,26 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
             if (!dbError)
                 emit(OperationStatus.Success("user logged in"))
             else
-                emit(OperationStatus.Error("",message = "Error"))
+                emit(OperationStatus.Error("", message = "Error"))
         }
     }
 
     override suspend fun signUp(email: String, password: String): Flow<OperationStatus<String>> {
-       return flow {
-           if (!dbError)
-               emit(OperationStatus.Success("user added"))
-           else
-               emit(OperationStatus.Error("",message = "Error"))
-       }
+        return flow {
+            if (!dbError)
+                emit(OperationStatus.Success("user added"))
+            else
+                emit(OperationStatus.Error("", message = "Error"))
+        }
     }
 
     override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>> {
         return flow {
             events.add(event)
             if (!dbError)
-            emit(OperationStatus.Success("records added"))
+                emit(OperationStatus.Success("records added"))
             else
-                emit(OperationStatus.Error("",message = "Error"))
+                emit(OperationStatus.Error("", message = "Error"))
         }
     }
 
@@ -51,9 +51,9 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
         return flow {
             attendees.add(attendee)
             if (!dbError)
-            emit(OperationStatus.Success("records added"))
+                emit(OperationStatus.Success("records added"))
             else
-                emit(OperationStatus.Error("",message = "Error"))
+                emit(OperationStatus.Error("", message = "Error"))
 
         }
     }
@@ -61,7 +61,7 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
     override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>> {
         return flow {
             if (!dbError)
-            emit(OperationStatus.Success("record added"))
+                emit(OperationStatus.Success("record added"))
             else
                 emit(OperationStatus.Error<String>(message = "Error"))
         }
@@ -113,7 +113,12 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
         attendeeUrl: String,
         attendeeId: Int
     ): Flow<OperationStatus<String>> {
-        TODO("Not yet implemented")
+        return flow {
+            if (!dbError)
+                emit(OperationStatus.Success("record updated"))
+            else
+                emit(OperationStatus.Error("", message = "Error"))
+        }
     }
 
     override suspend fun getAuthStatus(): Flow<String> {
@@ -129,7 +134,7 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository{
             if (!dbError)
                 emit(OperationStatus.Success("email sent"))
             else
-                emit(OperationStatus.Error("",message = "Error"))
+                emit(OperationStatus.Error("", message = "Error"))
         }
     }
 }

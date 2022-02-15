@@ -6,20 +6,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class UpdateRecordImage @Inject constructor(val repo: AttendanceMainRepository){
+class UpdateRecordImage @Inject constructor(val repo: AttendanceMainRepository) {
 
     suspend operator fun invoke(personId: Int, url: String): Flow<OperationStatus<String>> {
-            if (personId < 1){
-                return flow {
-                    emit(OperationStatus.Error(message = "Error id was null"))
-                }
+        if (personId < 1) {
+            return flow {
+                emit(OperationStatus.Error(message = "Error db id was invalid"))
             }
+        }
 
-             if (url.isBlank()){
-                 return flow {
-                     emit(OperationStatus.Error(message = "An url was not returned"))
-                 }
+        if (url.isBlank()) {
+            return flow {
+                emit(OperationStatus.Error(message = "An url was not returned"))
             }
+        }
 
         return repo.updateAttendee(url, personId)
     }
