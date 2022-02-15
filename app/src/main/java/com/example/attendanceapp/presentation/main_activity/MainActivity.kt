@@ -10,17 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlowActivity
 import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     val mainViewModel: MainActivityViewModel by viewModels()
-    private lateinit var navController : NavController
+    private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
 
@@ -28,18 +28,27 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setupNavigation()
-
+        //setupNavigation()
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment?
+        navController = navHostFragment!!.navController
         navController.navigate(R.id.splashFragment)
 
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onStart() {
         super.onStart()
         mainViewModel.checkAuthStatus()
-       // waitForViewModel()
+        // waitForViewModel()
 
         Handler().postDelayed({
             handleNavigation()
@@ -48,17 +57,7 @@ class MainActivity : AppCompatActivity() {
         //android:theme="@style/Theme.App.Starting"
     }
 
-    private fun setupNavigation() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment?
-        navController = navHostFragment!!.navController
-        appBarConfiguration = AppBarConfiguration.Builder(setOf(R.id.registerFragment,R.id.eventDetailFragment,R.id.checkAttendanceFragment, R.id.newAttendanceFragment)).build()
-       // NavigationUI.setupWithNavController(bottomNavigation,navController)
-        NavigationUI.setupActionBarWithNavController(this,navController)
-    }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
-    }
     fun handleNavigation() {
 
         collectLatestLifecycleFlowActivity(mainViewModel.authFlowState) { result ->
@@ -80,7 +79,6 @@ class MainActivity : AppCompatActivity() {
     fun setActionBarTitle(title: String?) {
         Objects.requireNonNull(supportActionBar)?.title = title
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
