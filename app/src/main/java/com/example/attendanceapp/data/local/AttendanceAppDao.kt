@@ -1,5 +1,6 @@
 package com.example.attendanceapp.data.local
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -41,5 +42,5 @@ interface AttendanceAppDao {
     fun getAttendeeByEvent(eventId: Int): List<AttendeeEntity>
 
     @Query("SELECT * FROM EventEntity ORDER BY eventId DESC")
-    fun getEvents(): List<EventEntity>
+    fun getEvents(): PagingSource<Int, EventEntity>
 }

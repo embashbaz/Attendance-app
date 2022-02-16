@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
@@ -21,6 +23,7 @@ import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.main_activity.MainActivityViewModel
 import com.example.attendanceapp.presentation.new_event.NewEventDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -44,7 +47,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
             EventListAdapter { item, view, position -> onEventClicked(item, view, position) }
         setUpRecyclerView()
 
-        //getEvents()
+
         onNewEventFbClicked()
         mainViewModel.RUN_FOR_THE_FIRST_TIME = false
         mainViewModel.checkAuthStatus()
@@ -87,9 +90,27 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
     private fun getEvents() {
         eventListViewModel.getAllEvent()
-        collectEventsStates()
+        //collectEventsStates()
         collectUIEvents()
+        collectPadedData()
     }
+
+
+
+    private fun collectPadedData(){
+        collectLatestLifecycleFlow(eventListViewModel.pagedData!!){ states ->
+            eventListFragmentBinding.eventListProgres.visibility = View.INVISIBLE
+            eventListFragmentBinding.recyclerView.visibility = View.VISIBLE
+            eventListAdapter.submitData(states)
+
+            eventListAdapter.loadStateFlow.collectLatest { loadStates ->
+                eventListFragmentBinding.eventListProgres.isVisible = loadStates.refresh is LoadState.Loading
+
+            }
+
+        }
+    }
+
 
     private fun collectEventsStates() {
         collectLatestLifecycleFlow(eventListViewModel.eventListState) { state ->
@@ -97,14 +118,12 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
                 eventListFragmentBinding.eventListProgres.visibility = View.VISIBLE
             } else {
                 eventListFragmentBinding.eventListProgres.visibility = View.INVISIBLE
-            }
-
-            if (state.allEvent.isNotEmpty()) {
                 eventListFragmentBinding.recyclerView.visibility = View.VISIBLE
-                eventListAdapter.setData(state.allEvent)
+                eventListAdapter.submitData(state.allEvent)
 
 
             }
+
 
             if (state.logOut){
                 mainViewModel.RUN_FOR_THE_FIRST_TIME = true

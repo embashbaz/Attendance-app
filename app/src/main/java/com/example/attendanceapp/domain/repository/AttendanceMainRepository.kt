@@ -1,6 +1,8 @@
 package com.example.attendanceapp.domain.repository
 
+import androidx.paging.PagingData
 import com.example.attendanceapp.core.utils.OperationStatus
+import com.example.attendanceapp.data.local.entity.EventEntity
 import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
@@ -20,7 +22,7 @@ interface AttendanceMainRepository {
 
     suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>>
 
-    suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>>
+    suspend fun getAllEvents(): Flow<PagingData<EventEntity>>
 
     suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>>
 

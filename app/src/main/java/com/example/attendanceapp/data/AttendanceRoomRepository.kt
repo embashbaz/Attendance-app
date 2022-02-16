@@ -1,8 +1,12 @@
 package com.example.attendanceapp.data
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.data.local.AttendanceAppDao
+import com.example.attendanceapp.data.local.entity.EventEntity
 import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
@@ -14,6 +18,11 @@ import kotlinx.coroutines.flow.flow
 
 class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Authenticator) :
     AttendanceMainRepository {
+
+    companion object {
+        const val PAGE_SIZE = 20
+    }
+
     override suspend fun signIn(email: String, password: String): Flow<OperationStatus<String>> =
         flow {
             try {
@@ -52,7 +61,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
                 emit(OperationStatus.Error<String>(message = e.toString()))
             }
 
-    }
+        }
 
     override suspend fun insertEvent(event: Event): Flow<OperationStatus<String>> = flow {
         try {
@@ -64,15 +73,16 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
         }
     }
 
-    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> = channelFlow {
-        try {
-            val recordId = dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
-            send(OperationStatus.Success(data = recordId.toString()))
+    override suspend fun insertAttendee(attendee: Attendee): Flow<OperationStatus<String>> =
+        channelFlow {
+            try {
+                val recordId = dao.insertAttendee(attendee.AttendeeToAttendeeEntity())
+                send(OperationStatus.Success(data = recordId.toString()))
 
-        } catch (e: Exception) {
-            send(OperationStatus.Error("", message = e.toString()))
+            } catch (e: Exception) {
+                send(OperationStatus.Error("", message = e.toString()))
+            }
         }
-    }
 
     override suspend fun insertAttendanceRecord(attendees: List<Attendance>): Flow<OperationStatus<String>> =
         flow {
@@ -89,7 +99,7 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
         attendeeUrl: String,
         attendeeId: Int
     ): Flow<OperationStatus<String>> {
-        return channelFlow{
+        return channelFlow {
             try {
                 dao.update(attendeeUrl, attendeeId)
                 send(OperationStatus.Success("records updated"))
@@ -100,14 +110,15 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
         }
     }
 
-    override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>> = flow {
-        try {
-            val events = dao.getEvents().map { it.eventEntityToEvent() }
-            emit(OperationStatus.Success(events))
+    override suspend fun getAllEvents(): Flow<PagingData<EventEntity>> {
 
-        } catch (e: Exception) {
-            emit(OperationStatus.Error<List<Event>>(message = e.toString()))
-        }
+        val pageConfig = PagingConfig(20)
+
+        return Pager(pageConfig, null) {
+            dao.getEvents()
+        }.flow
+
+
     }
 
     override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> =
