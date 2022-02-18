@@ -1,6 +1,8 @@
 package com.example.attendanceapp.data
 
+import androidx.paging.PagingData
 import com.example.attendanceapp.core.utils.OperationStatus
+import com.example.attendanceapp.data.local.entity.EventEntity
 import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
@@ -67,44 +69,29 @@ class AttendanceFakeRepoImpl : AttendanceMainRepository {
         }
     }
 
-    override suspend fun getAllEvents(): Flow<OperationStatus<List<Event>>> {
-        return flow {
-            if (!dbError)
-                emit(OperationStatus.Success(events as List<Event>))
-            else
-                emit(OperationStatus.Error<List<Event>>(message = "Error"))
-        }
+    override suspend fun getAllEvents(): Flow<PagingData<EventEntity>> {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> {
-        return flow {
-            if (!dbError)
-                emit(OperationStatus.Success(attendees as List<Attendee>))
-            else
-                emit(OperationStatus.Error<List<Attendee>>(message = "Error"))
-        }
+    override suspend fun getAllParticipants(eventId: Int): Flow<PagingData<Attendee>> {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>> {
-        return flow {
-            if (!dbError)
-                emit(OperationStatus.Success(attendances as List<Attendance>))
-            else
-                emit(OperationStatus.Error<List<Attendance>>(message = "Error"))
-        }
+    override suspend fun getAllAttendance(eventId: Int): Flow<PagingData<Attendance>> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getAttendanceByAttendee(
         eventId: Int,
         attendeeName: String
-    ): Flow<OperationStatus<List<Attendance>>> {
+    ): Flow<PagingData<Attendance>> {
         return getAllAttendance(eventId)
     }
 
     override suspend fun getAttendanceByDate(
         eventId: Int,
         day: String
-    ): Flow<OperationStatus<List<Attendance>>> {
+    ): Flow<PagingData<Attendance>> {
         return getAllAttendance(eventId)
     }
 
