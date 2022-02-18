@@ -19,18 +19,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.NewAttendeeBinding
+import com.example.attendanceapp.domain.models.Attendee
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
 import java.io.File
 
 
 @AndroidEntryPoint
-class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
+class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee?) : DialogFragment() {
     private lateinit var newAttendeeDialogBinding: NewAttendeeBinding
     private val newAttendeeViewModel: NewAttendeeViewModel by viewModels()
     internal lateinit var newAttendeeDialogListener: NewAttendeeDialogListener
@@ -82,7 +85,18 @@ class NewAttendeeDialog(private val eventId: Int) : DialogFragment() {
 
         collectAddingNewAttendeeEvent()
         collectAddingNewAttendeeState()
+        setAttendeeData()
 
+    }
+
+    fun setAttendeeData(){
+        if(attendee != null){
+            newAttendeeDialogBinding.attendeeNameTl.editText!!.setText(attendee.name)
+            if (attendee.pictureId.isNotEmpty()){
+                Glide.with(newAttendeeDialogBinding.root).load(attendee.pictureId).apply(RequestOptions.circleCropTransform()).into(newAttendeeDialogBinding.attendeeImg)
+            }
+            newAttendeeDialogBinding.saveAttendeeBt.isEnabled = false
+        }
     }
 
     private fun listenToImageClick() {

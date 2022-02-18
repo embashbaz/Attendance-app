@@ -30,6 +30,14 @@ class GenericAttendeeAdapter (onClick: (Any) -> Unit) :
 
     class ViewHolder(val attendeeItemBinding: AttendeeItemBinding, onClick: (Any) -> Unit) : RecyclerView.ViewHolder(attendeeItemBinding.root){
 
+        lateinit var item: Any
+
+
+        init {
+           attendeeItemBinding.root.setOnClickListener {
+                onClick(item)
+            }
+        }
 
         fun bind(item: Any){
             if (item is Attendee) {
@@ -39,6 +47,7 @@ class GenericAttendeeAdapter (onClick: (Any) -> Unit) :
                 if (item.pictureId.isNotBlank()){
                     Glide.with(attendeeItemBinding.root).load(item.pictureId).apply(RequestOptions.circleCropTransform()).into(attendeeItemBinding.attendeeImgListItem)
                 }
+                this.item = item
 
 
             }else if(item is Attendance){

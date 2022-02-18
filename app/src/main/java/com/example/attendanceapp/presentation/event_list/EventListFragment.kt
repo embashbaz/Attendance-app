@@ -46,6 +46,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
         eventListAdapter =
             EventListAdapter { item, view, position -> onEventClicked(item, view, position) }
         setUpRecyclerView()
+        collectEventsStates()
 
 
         onNewEventFbClicked()
@@ -65,11 +66,11 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
             val newEventDialog = NewEventDialog()
             newEventDialog.setListener(this)
 
-            newEventDialog.show(parentFragmentManager, "New Event")
-
+            newEventDialog.show(parentFragmentManager, "Event")
 
         }
     }
+
 
     private fun onEventClicked(item: Any, view: View, position: Int) {
 
@@ -114,15 +115,15 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
 
     private fun collectEventsStates() {
         collectLatestLifecycleFlow(eventListViewModel.eventListState) { state ->
-            if (state.isLoading) {
-                eventListFragmentBinding.eventListProgres.visibility = View.VISIBLE
-            } else {
-                eventListFragmentBinding.eventListProgres.visibility = View.INVISIBLE
-                eventListFragmentBinding.recyclerView.visibility = View.VISIBLE
-                eventListAdapter.submitData(state.allEvent)
-
-
-            }
+//            if (state.isLoading) {
+//                eventListFragmentBinding.eventListProgres.visibility = View.VISIBLE
+//            } else {
+//                eventListFragmentBinding.eventListProgres.visibility = View.INVISIBLE
+//                eventListFragmentBinding.recyclerView.visibility = View.VISIBLE
+//                eventListAdapter.submitData(state.allEvent)
+//
+//
+//            }
 
 
             if (state.logOut){
@@ -177,7 +178,7 @@ class EventListFragment : Fragment(), NewEventDialog.NewEventDialogListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout_menu){
             eventListViewModel.signOut()
-            //mainViewModel.checkAuthStatus()
+            mainViewModel.checkAuthStatus()
         }
 
 

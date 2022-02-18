@@ -12,6 +12,7 @@ import androidx.transition.TransitionInflater
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.databinding.FragmentEventDetailBinding
+import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.presentation.main_activity.MainActivity
 import com.example.attendanceapp.presentation.new_attendee.NewAttendeeDialog
@@ -65,10 +66,14 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
 
     private fun addAttendeeBtListener() {
         eventDetailBinding.addAttendeeFb.setOnClickListener {
-            val newAttendeeDialog = NewAttendeeDialog(eventObject.eventId)
-            newAttendeeDialog.setListener(this)
-            newAttendeeDialog.show(parentFragmentManager, "New Attendee")
+            openNewAttendeeDialog(eventObject.eventId, null)
         }
+    }
+
+    private fun openNewAttendeeDialog(id: Int, attendee: Attendee?){
+        val newAttendeeDialog = NewAttendeeDialog(id, attendee)
+        newAttendeeDialog.setListener(this)
+        newAttendeeDialog.show(parentFragmentManager, "Attendee")
     }
 
     fun collectEventDetailInfo() {
@@ -95,7 +100,9 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
     }
 
     private fun onAttendeeClicked(attendee: Any) {
-
+            if (attendee is Attendee){
+                openNewAttendeeDialog(eventObject.eventId, attendee)
+            }
     }
 
     override fun onDialogDismissed(value: Boolean) {
