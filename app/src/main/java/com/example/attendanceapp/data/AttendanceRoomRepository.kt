@@ -123,25 +123,21 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
 
     }
 
-    override suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>> =
-        flow {
-            try {
-                val attendees =
-                    dao.getAttendeeByEvent(eventId).map { it.AttendeeEntityToAttendee() }
-                emit(OperationStatus.Success(attendees))
+    override suspend fun getAllParticipants(eventId: Int): Flow<PagingData<Attendee>> {
+        val pageConfig = PagingConfig(20)
 
-            } catch (e: Exception) {
-                emit(OperationStatus.Error<List<Attendee>>(message = e.toString()))
-            }
-        }
+        return Pager(pageConfig, null) {
+            dao.getAttendeeByEvent(eventId)
+        }.flow.map { it -> it.map { it.AttendeeEntityToAttendee() } }
+    }
 
     override suspend fun getAllAttendance(eventId: Int): Flow<PagingData<Attendance>> {
-            val pageConfig = PagingConfig(20)
+        val pageConfig = PagingConfig(20)
 
-            return Pager(pageConfig, null) {
-                dao.getAllAttendance(eventId)
-            }.flow.map { it -> it.map { it.attendanceEntityToAttendance() } }
-        }
+        return Pager(pageConfig, null) {
+            dao.getAllAttendance(eventId)
+        }.flow.map { it -> it.map { it.attendanceEntityToAttendance() } }
+    }
 
     override suspend fun getAttendanceByAttendee(
         eventId: Int,

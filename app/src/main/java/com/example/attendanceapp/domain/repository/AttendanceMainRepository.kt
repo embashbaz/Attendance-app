@@ -24,7 +24,7 @@ interface AttendanceMainRepository {
 
     suspend fun getAllEvents(): Flow<PagingData<EventEntity>>
 
-    suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>>
+    suspend fun getAllParticipants(eventId: Int): Flow<PagingData<Attendee>>
 
     suspend fun getAllAttendance(eventId: Int): Flow<PagingData<Attendance>>
 

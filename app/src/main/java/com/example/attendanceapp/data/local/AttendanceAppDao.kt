@@ -38,7 +38,7 @@ interface AttendanceAppDao {
     fun getAllAttendance(eventId: Int): PagingSource<Int, AttendanceEntity>
 
     @Query("SELECT * FROM AttendeeEntity WHERE eventDbId = :eventId ORDER BY personDbId DESC")
-    fun getAttendeeByEvent(eventId: Int): List<AttendeeEntity>
+    fun getAttendeeByEvent(eventId: Int): PagingSource<Int, AttendeeEntity>
 
     @Query("SELECT * FROM EventEntity ORDER BY eventId DESC")
     fun getEvents(): PagingSource<Int, EventEntity>
