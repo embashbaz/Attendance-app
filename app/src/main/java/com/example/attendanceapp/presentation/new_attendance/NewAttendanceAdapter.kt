@@ -3,15 +3,18 @@ package com.example.attendanceapp.presentation.new_attendance
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.attendanceapp.databinding.AttendeeItemBinding
+import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.models.Attendee
 
 
 class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
-    RecyclerView.Adapter<NewAttendanceAdapter.ViewHolder>() {
+    PagingDataAdapter<Any, NewAttendanceAdapter.ViewHolder>(ATTENDEE_COMPARATOR) {
 
 
     private var allItems: List<Any> = emptyList()
@@ -24,19 +27,12 @@ class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = allItems.get(position)
+        val item = getItem(position) as Any
 
         holder.bind(item, itemCheckListener)
 
     }
 
-    override fun getItemCount() = allItems.size
-
-    fun setData(items: List<Any>) {
-        allItems = items
-        notifyDataSetChanged()
-
-    }
 
     class ViewHolder(val attendeeItemBinding: AttendeeItemBinding) :
         RecyclerView.ViewHolder(attendeeItemBinding.root) {
@@ -88,6 +84,30 @@ class NewAttendanceAdapter(onItemCheckListener: OnItemCheckListener) :
     interface OnItemCheckListener {
         fun onItemCheck(item: Any)
         fun onItemUncheck(item: Any)
+    }
+
+    companion object {
+        private val ATTENDEE_COMPARATOR = object : DiffUtil.ItemCallback<Any>() {
+            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+                if (oldItem is Attendee && newItem is Attendee) {
+                    return oldItem.personDbId == newItem.personDbId
+                } else if (oldItem is Attendance && newItem is Attendance) {
+                    return oldItem.attendanceId == newItem.attendanceId
+                } else {
+                    return false
+                }
+            }
+
+            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+                if (oldItem is Attendee && newItem is Attendee) {
+                    return oldItem == newItem
+                } else if (oldItem is Attendance && newItem is Attendance) {
+                    return oldItem == newItem
+                } else {
+                    return false
+                }
+            }
+        }
     }
 
 
