@@ -28,7 +28,7 @@ class Register @Inject constructor(val attendanceMainRepository: AttendanceMainR
             }
         }
 
-        return attendanceMainRepository.signUp(email, password)
+        return attendanceMainRepository.signUp(email.trim(), password)
 
     }
 }

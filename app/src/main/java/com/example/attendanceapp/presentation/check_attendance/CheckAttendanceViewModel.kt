@@ -3,6 +3,7 @@ package com.example.attendanceapp.presentation.check_attendance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.models.Attendance
 import com.example.attendanceapp.domain.use_case.GetAttendance
@@ -57,7 +58,7 @@ class CheckAttendanceViewModel @Inject constructor(private val getAttendance: Ge
                         _attendanceState.value.type,
                         _attendanceState.value.eventId,
                         query
-                    ).collect { result ->
+                    ).cachedIn(viewModelScope).collect { result ->
 
                         _attendanceState.value = attendanceState.value.copy(
                             isLoading = false

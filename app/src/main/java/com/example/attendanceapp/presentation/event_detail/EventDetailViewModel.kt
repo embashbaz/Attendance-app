@@ -3,6 +3,7 @@ package com.example.attendanceapp.presentation.event_detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
@@ -46,7 +47,7 @@ class EventDetailViewModel @Inject constructor(
             val validateEventId = validateGetAttendeeParameters(eventId)
 
             if (validateEventId is OperationStatus.Success) {
-                getAllEventParticipant(eventId).collect { result ->
+                getAllEventParticipant(eventId).cachedIn(viewModelScope).collect { result ->
 
                     _attendeepagedData.emit(result)
 

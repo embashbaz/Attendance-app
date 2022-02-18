@@ -16,7 +16,7 @@ class Login @Inject constructor(val repo: AttendanceMainRepository){
             }
         }
 
-        return repo.signIn(email, password)
+        return repo.signIn(email.trim(), password)
 
     }
 
