@@ -2,11 +2,13 @@ package com.example.attendanceapp.presentation.new_attendance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.models.Attendee
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.use_case.AddNewAttendance
 import com.example.attendanceapp.domain.use_case.GetAllEventParticipant
+import com.example.attendanceapp.domain.use_case.ValidateGetAttendeeParameters
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NewAttendanceViewModel @Inject constructor(
     private val getAllEventParticipant: GetAllEventParticipant,
-    private val addNewAttendance: AddNewAttendance
+    private val addNewAttendance: AddNewAttendance,
+    private val validateGetAttendeeParameters: ValidateGetAttendeeParameters
 ) : ViewModel() {
 
     private val _newAttendanceState = MutableStateFlow(NewAttendanceFragmentState())
@@ -24,6 +27,9 @@ class NewAttendanceViewModel @Inject constructor(
 
     private val _newAttendanceUIEvent = MutableSharedFlow<NewAttendanceUIEvent>(replay = 1)
     val newAttendanceUIEvent = _newAttendanceUIEvent.asSharedFlow()
+
+    private val _attendeepagedData = MutableSharedFlow<PagingData<Attendee>>(replay = 1)
+    val attendeepagedData = _attendeepagedData.asSharedFlow()
 
     fun setEventObject(event: Event) {
         _newAttendanceState.value = newAttendanceState.value.copy(
@@ -42,24 +48,24 @@ class NewAttendanceViewModel @Inject constructor(
 
     fun getAllAttendee() {
         viewModelScope.launch(Dispatchers.IO) {
-            getAllEventParticipant(_newAttendanceState.value.eventObject.eventId).collect { result ->
-                when (result) {
-                    is OperationStatus.Success -> {
-                        _newAttendanceState.value = newAttendanceState.value.copy(
-                            allParticipants = result.data!!
-                        )
 
-                    }
+            val eventId = _newAttendanceState.value.eventObject.eventId
+            val validateEventId = validateGetAttendeeParameters(eventId)
 
-                    is OperationStatus.Error -> {
-                        _newAttendanceUIEvent.emit(
-                            NewAttendanceUIEvent.ShowToast(
-                                result.message
-                                    ?: "An error occurred while loading participants list"
-                            )
-                        )
-                    }
+            if (validateEventId is OperationStatus.Success) {
+                getAllEventParticipant(eventId).collect { result ->
+
+                    _attendeepagedData.emit(result)
+
+
                 }
+            } else if (validateEventId is OperationStatus.Error) {
+                _newAttendanceUIEvent.emit(
+                    NewAttendanceUIEvent.ShowToast(
+                        validateEventId.message
+                            ?: "An error occurred while loading participants list"
+                    )
+                )
             }
         }
     }
