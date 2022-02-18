@@ -2,7 +2,6 @@ package com.example.attendanceapp.presentation.take_attendance_camera
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.domain.models.Event
 import com.example.attendanceapp.domain.use_case.GetAllEventParticipant
 import com.example.attendanceapp.presentation.event_detail.EventDetailViewModel
@@ -45,25 +44,25 @@ class CameraAttendanceViewModel @Inject constructor(private val getAllEventParti
     fun getAttendees() {
         viewModelScope.launch(Dispatchers.IO) {
             getAllEventParticipant(_cameraAttendanceState.value.eventObject.eventId).collect { result ->
-                when (result) {
-                    is OperationStatus.Success -> {
-                        _cameraAttendanceState.value = cameraAttendanceState.value.copy(
-                            participants = result.data!!,
-                            isLoading = false
-                        )
-
-                    }
-
-                    is OperationStatus.Error -> {
-                        _cameraAttendanceUIEvent.emit(
-                            EventDetailViewModel.EventDetailUIEvent.ShowSnackBar(
-                                result.message
-                                    ?: "An error occurred while loading participants list"
-                            )
-                        )
-                    }
-
-                }
+//                when (result) {
+//                    is OperationStatus.Success -> {
+//                        _cameraAttendanceState.value = cameraAttendanceState.value.copy(
+//                            participants = result.data!!,
+//                            isLoading = false
+//                        )
+//
+//                    }
+//
+//                    is OperationStatus.Error -> {
+//                        _cameraAttendanceUIEvent.emit(
+//                            EventDetailViewModel.EventDetailUIEvent.ShowSnackBar(
+//                                result.message
+//                                    ?: "An error occurred while loading participants list"
+//                            )
+//                        )
+//                    }
+//
+//                }
 
             }
 

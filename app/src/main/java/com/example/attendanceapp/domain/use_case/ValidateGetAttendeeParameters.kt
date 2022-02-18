@@ -1,8 +1,9 @@
 package com.example.attendanceapp.domain.use_case
 
 import com.example.attendanceapp.core.utils.OperationStatus
+import javax.inject.Inject
 
-class ValidateGetAttendeeParameters {
+class ValidateGetAttendeeParameters @Inject constructor() {
     suspend operator fun invoke(
         eventId: Int
     ): OperationStatus<Boolean> {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
 import com.example.attendanceapp.core.utils.ui.showLongToast
@@ -72,13 +73,15 @@ class NewAttendanceFragment : Fragment() {
 
     private fun collectAllAttendanceEventAndState() {
         collectLatestLifecycleFlow(newAttendanceViewModel.newAttendanceState) { data ->
-            if (data.allParticipants.isNotEmpty()) {
-                newAttendanceAdapter.setData(data.allParticipants)
-            }
 
             if(data.checkedParticipants.isNotEmpty()){
                 newAttendanceBinding.attendeePresentTxt.text =" ${data.checkedParticipants.size} people are present"
             }
+        }
+
+        collectLatestLifecycleFlow(newAttendanceViewModel.attendeepagedData){ pagedData ->
+            newAttendanceAdapter.submitData(pagedData as PagingData<Any>)
+
         }
 
         collectLatestLifecycleFlow(newAttendanceViewModel.newAttendanceUIEvent) { event ->

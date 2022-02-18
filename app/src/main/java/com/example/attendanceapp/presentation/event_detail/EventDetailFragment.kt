@@ -6,6 +6,7 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import com.example.attendanceapp.R
@@ -28,7 +29,8 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = 500
@@ -46,10 +48,11 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
         eventDetailBinding = FragmentEventDetailBinding.inflate(inflater, container, false)
         val view = eventDetailBinding.root
 
-        val position =EventDetailFragmentArgs.fromBundle(requireArguments()).position
+        val position = EventDetailFragmentArgs.fromBundle(requireArguments()).position
         ViewCompat.setTransitionName(eventDetailBinding.cardViewEventDetails, "event_${position}")
         eventDetailViewModel.setEventObject(EventDetailFragmentArgs.fromBundle(requireArguments()).event)
         collectEventDetailInfo()
+        collectPagedData()
 
         genericAttendeeAdapter = GenericAttendeeAdapter { attendee -> onAttendeeClicked(attendee) }
         setUpRecyclerView()
@@ -61,26 +64,28 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
     }
 
     private fun addAttendeeBtListener() {
-        eventDetailBinding.addAttendeeFb.setOnClickListener{
+        eventDetailBinding.addAttendeeFb.setOnClickListener {
             val newAttendeeDialog = NewAttendeeDialog(eventObject.eventId)
             newAttendeeDialog.setListener(this)
             newAttendeeDialog.show(parentFragmentManager, "New Attendee")
         }
     }
 
-    fun collectEventDetailInfo(){
-        collectLatestLifecycleFlow(eventDetailViewModel.eventDetailState){ data ->
+    fun collectEventDetailInfo() {
+        collectLatestLifecycleFlow(eventDetailViewModel.eventDetailState) { data ->
 
             eventDetailBinding.eventNameEventDetailsTxt.setText(data.eventObject.eventName)
             eventDetailBinding.eventTypeEventDetailsTxt.setText(data.eventObject.eventType)
             eventDetailBinding.eventDescriptionDetail.setText(data.eventObject.description)
             eventObject = data.eventObject
 
-            if (data.participants.isNotEmpty()){
-                genericAttendeeAdapter.setData(data.participants)
-            }
 
+        }
+    }
 
+    fun collectPagedData() {
+        collectLatestLifecycleFlow(eventDetailViewModel.attendeepagedData) {
+            genericAttendeeAdapter.submitData(it as PagingData<Any>)
         }
     }
 
@@ -104,37 +109,38 @@ class EventDetailFragment : Fragment(), NewAttendeeDialog.NewAttendeeDialogListe
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-       if(item.itemId == R.id.new_attend_menu){
-           navigateToRecordAttendance()
-       }else if (item.itemId == R.id.check_att_menu){
-           navigateToCheckAttendance()
-       }else if (item.itemId == R.id.take_attend_cam_menu){
-           navigateToCameraAttendance()
-       }
+        if (item.itemId == R.id.new_attend_menu) {
+            navigateToRecordAttendance()
+        } else if (item.itemId == R.id.check_att_menu) {
+            navigateToCheckAttendance()
+        } else if (item.itemId == R.id.take_attend_cam_menu) {
+            navigateToCameraAttendance()
+        }
 
 
         return super.onOptionsItemSelected(item)
     }
 
-    fun navigateToCheckAttendance(){
+    fun navigateToCheckAttendance() {
         val bundle = Bundle()
-        bundle.putInt("event_id",eventObject.eventId)
-        this.findNavController().navigate(R.id.action_eventDetailFragment_to_checkAttendanceFragment, bundle)
+        bundle.putInt("event_id", eventObject.eventId)
+        this.findNavController()
+            .navigate(R.id.action_eventDetailFragment_to_checkAttendanceFragment, bundle)
 
     }
 
-    fun navigateToCameraAttendance(){
-        this.findNavController().navigate(R.id.action_eventDetailFragment_to_cameraAttendanceFragment)
+    fun navigateToCameraAttendance() {
+        this.findNavController()
+            .navigate(R.id.action_eventDetailFragment_to_cameraAttendanceFragment)
     }
 
-    fun navigateToRecordAttendance(){
+    fun navigateToRecordAttendance() {
         val bundle = Bundle()
-        bundle.putParcelable("event_info",eventObject)
-        this.findNavController().navigate(R.id.action_eventDetailFragment_to_newAttendanceFragment, bundle)
+        bundle.putParcelable("event_info", eventObject)
+        this.findNavController()
+            .navigate(R.id.action_eventDetailFragment_to_newAttendanceFragment, bundle)
 
     }
-
-
 
 
 }

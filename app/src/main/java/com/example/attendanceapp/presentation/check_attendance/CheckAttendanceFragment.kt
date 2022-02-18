@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
@@ -45,6 +46,7 @@ class CheckAttendanceFragment : Fragment() {
 
         collectLatestUIState()
         collectLatestUIEvent()
+        collectPagedData()
         return view
     }
 
@@ -154,15 +156,15 @@ class CheckAttendanceFragment : Fragment() {
                 checkAttendanceBinding.attendanceListProgress.visibility = View.INVISIBLE
             }
 
-            if (state.attendance.isNotEmpty()) {
-                genericAttendeeAdapter.setData(state.attendance)
-            } else {
-                showLongSnackBar(requireView(), "No data returned")
-                genericAttendeeAdapter.setData(emptyList())
-            }
         }
 
 
+    }
+
+    fun collectPagedData(){
+        collectLatestLifecycleFlow(checkAttendanceViewModel.attendancepagedData){
+            genericAttendeeAdapter.submitData(it as PagingData<Any>)
+        }
     }
 
     private fun collectLatestUIEvent() {

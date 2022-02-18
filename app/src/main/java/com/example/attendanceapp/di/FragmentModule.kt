@@ -1,10 +1,7 @@
 package com.example.attendanceapp.di
 
 import com.example.attendanceapp.domain.repository.AttendanceMainRepository
-import com.example.attendanceapp.domain.use_case.AddEvent
-import com.example.attendanceapp.domain.use_case.GetAllEventParticipant
-import com.example.attendanceapp.domain.use_case.GetAllEvents
-import com.example.attendanceapp.domain.use_case.SignOut
+import com.example.attendanceapp.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +26,22 @@ object FragmentModule {
     @Provides
     fun provideGetAllEvents(repository: AttendanceMainRepository): GetAllEvents {
         return GetAllEvents(repository)
+    }
+
+    @Provides
+    fun provideValidateGetAttendeeParam() =  ValidateGetAttendeeParameters()
+
+    @Provides
+    fun provideValidateGetAttendanceParam() =  ValidateGetAllParticipantParameters()
+
+    @Provides
+    fun provideGetAttendance(repository: AttendanceMainRepository): GetAttendance{
+        return GetAttendance(repository)
+    }
+
+    @Provides
+    fun provideGetAttendees(repository: AttendanceMainRepository): GetAllEventParticipant{
+        return GetAllEventParticipant(repository)
     }
 
     @Provides

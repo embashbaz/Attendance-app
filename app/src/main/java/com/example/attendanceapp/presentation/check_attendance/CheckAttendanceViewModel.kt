@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckAttendanceViewModel @Inject constructor(private val getAttendance: GetAttendance, val validateGetAllParticipantParameters: ValidateGetAllParticipantParameters) : ViewModel(){
+class CheckAttendanceViewModel @Inject constructor(private val getAttendance: GetAttendance, private val validateGetAllParticipantParameters: ValidateGetAllParticipantParameters) : ViewModel(){
 
 
     private val _attendanceState = MutableStateFlow(CheckAttendanceFragmentState())
