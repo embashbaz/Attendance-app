@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.example.attendanceapp.core.utils.OperationStatus
 import com.example.attendanceapp.data.local.AttendanceAppDao
 import com.example.attendanceapp.data.local.entity.EventEntity
@@ -15,6 +16,7 @@ import com.example.attendanceapp.domain.repository.Authenticator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Authenticator) :
     AttendanceMainRepository {
@@ -133,44 +135,34 @@ class AttendanceRoomRepository(val dao: AttendanceAppDao, val authenticator: Aut
             }
         }
 
-    override suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>> =
-        flow {
-            try {
-                val attendees =
-                    dao.getAllAttendance(eventId).map { it.attendanceEntityToAttendance() }
-                emit(OperationStatus.Success(attendees))
+    override suspend fun getAllAttendance(eventId: Int): Flow<PagingData<Attendance>> {
+            val pageConfig = PagingConfig(20)
 
-            } catch (e: Exception) {
-                emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
-            }
+            return Pager(pageConfig, null) {
+                dao.getAllAttendance(eventId)
+            }.flow.map { it -> it.map { it.attendanceEntityToAttendance() } }
         }
 
     override suspend fun getAttendanceByAttendee(
         eventId: Int,
         attendeeName: String
-    ): Flow<OperationStatus<List<Attendance>>> = flow {
-        try {
-            val attendees = dao.getAttendanceByAttendee(attendeeName, eventId)
-                .map { it.attendanceEntityToAttendance() }
-            emit(OperationStatus.Success(attendees))
+    ): Flow<PagingData<Attendance>> {
+        val pageConfig = PagingConfig(20)
 
-        } catch (e: Exception) {
-            emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
-        }
+        return Pager(pageConfig, null) {
+            dao.getAttendanceByAttendee(attendeeName, eventId)
+        }.flow.map { it -> it.map { it.attendanceEntityToAttendance() } }
     }
 
     override suspend fun getAttendanceByDate(
         eventId: Int,
         day: String
-    ): Flow<OperationStatus<List<Attendance>>> = flow {
-        try {
-            val attendees =
-                dao.getAttendanceByDay(day, eventId).map { it.attendanceEntityToAttendance() }
-            emit(OperationStatus.Success(attendees))
+    ): Flow<PagingData<Attendance>> {
+        val pageConfig = PagingConfig(20)
 
-        } catch (e: Exception) {
-            emit(OperationStatus.Error<List<Attendance>>(message = e.toString()))
-        }
+        return Pager(pageConfig, null) {
+            dao.getAttendanceByDay(day, eventId)
+        }.flow.map { it -> it.map { it.attendanceEntityToAttendance() } }
     }
 
     override suspend fun logout(): Flow<OperationStatus<String>> = flow {

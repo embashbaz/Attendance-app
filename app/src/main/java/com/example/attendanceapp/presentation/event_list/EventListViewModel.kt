@@ -36,7 +36,6 @@ class EventListViewModel @Inject constructor(
             pagedData = getAllEventUC()
         }
 
-
     }
 
     fun signOut() {

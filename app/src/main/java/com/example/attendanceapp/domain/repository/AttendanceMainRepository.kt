@@ -26,11 +26,11 @@ interface AttendanceMainRepository {
 
     suspend fun getAllParticipants(eventId: Int): Flow<OperationStatus<List<Attendee>>>
 
-    suspend fun getAllAttendance(eventId: Int): Flow<OperationStatus<List<Attendance>>>
+    suspend fun getAllAttendance(eventId: Int): Flow<PagingData<Attendance>>
 
-    suspend fun getAttendanceByAttendee(eventId: Int, attendeeName: String): Flow<OperationStatus<List<Attendance>>>
+    suspend fun getAttendanceByAttendee(eventId: Int, attendeeName: String): Flow<PagingData<Attendance>>
 
-    suspend fun getAttendanceByDate(eventId: Int, day: String): Flow<OperationStatus<List<Attendance>>>
+    suspend fun getAttendanceByDate(eventId: Int, day: String): Flow<PagingData<Attendance>>
 
     suspend fun getAuthStatus(): Flow<String>
 

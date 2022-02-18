@@ -7,7 +7,6 @@ import androidx.room.Query
 import com.example.attendanceapp.data.local.entity.AttendanceEntity
 import com.example.attendanceapp.data.local.entity.AttendeeEntity
 import com.example.attendanceapp.data.local.entity.EventEntity
-import com.example.attendanceapp.domain.models.Attendance
 
 
 @Dao
@@ -27,16 +26,16 @@ interface AttendanceAppDao {
 
 
     @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY day DESC")
-    fun getAttendanceByEvent(eventId: Int): List<Attendance>
+    fun getAttendanceByEvent(eventId: Int): PagingSource<Int, AttendanceEntity>
 
     @Query("SELECT * FROM AttendanceEntity WHERE attendeeName LIKE '%' || :attendeeNameQuery || '%' AND eventId = :eventId ORDER BY attendanceId DESC")
-    fun getAttendanceByAttendee(attendeeNameQuery: String, eventId: Int): List<AttendanceEntity>
+    fun getAttendanceByAttendee(attendeeNameQuery: String, eventId: Int): PagingSource<Int, AttendanceEntity>
 
     @Query("SELECT * FROM AttendanceEntity WHERE day = :day AND eventId = :eventId ORDER BY attendanceId DESC")
-    fun getAttendanceByDay(day: String, eventId: Int): List<AttendanceEntity>
+    fun getAttendanceByDay(day: String, eventId: Int): PagingSource<Int, AttendanceEntity>
 
     @Query("SELECT * FROM AttendanceEntity WHERE eventId = :eventId ORDER BY attendanceId DESC")
-    fun getAllAttendance(eventId: Int): List<AttendanceEntity>
+    fun getAllAttendance(eventId: Int): PagingSource<Int, AttendanceEntity>
 
     @Query("SELECT * FROM AttendeeEntity WHERE eventDbId = :eventId ORDER BY personDbId DESC")
     fun getAttendeeByEvent(eventId: Int): List<AttendeeEntity>
