@@ -12,7 +12,6 @@ class ValidateGetAttendanceParametersTest {
 
     @Before
     fun setUp() {
-
         getAttendance = ValidateGetAllParticipantParameters()
 
     }
