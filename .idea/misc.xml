@@ -28,6 +28,7 @@
         <entry key="app/src/main/res/menu/event_detail_menu.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/menu/event_list_menu.xml" value="0.22135416666666666" />
         <entry key="app/src/main/res/menu/event_type_menu.xml" value="0.190625" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.221875" />
       </map>
     </option>
   </component>

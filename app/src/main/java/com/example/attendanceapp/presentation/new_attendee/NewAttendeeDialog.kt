@@ -2,13 +2,8 @@ package com.example.attendanceapp.presentation.new_attendee
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -17,29 +12,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.attendanceapp.R
 import com.example.attendanceapp.core.utils.collectLatestLifecycleFlow
+import com.example.attendanceapp.core.utils.getTime
 import com.example.attendanceapp.core.utils.ui.showLongToast
 import com.example.attendanceapp.core.utils.ui.stringFromTl
 import com.example.attendanceapp.databinding.NewAttendeeBinding
 import com.example.attendanceapp.domain.models.Attendee
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 
 
 @AndroidEntryPoint
-class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee?) : DialogFragment() {
+class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee?) :
+    DialogFragment() {
     private lateinit var newAttendeeDialogBinding: NewAttendeeBinding
     private val newAttendeeViewModel: NewAttendeeViewModel by viewModels()
     internal lateinit var newAttendeeDialogListener: NewAttendeeDialogListener
     val REQUEST_IMAGE_CAPTURE = 1
-    private var imageBitmap: Bitmap? = null
     private var imageUri: Uri? = null
+    private var currentPhotoPath: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +70,10 @@ class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee
         }
 
         newAttendeeDialogBinding.closeNewAttendeeBt.setOnClickListener {
+            showImagePath()
+            // if(currentPhotoPath.isNotEmpty()){
+            deleteFileAfterUpload()
+
             dialog?.dismiss()
         }
 
@@ -87,13 +89,22 @@ class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee
         collectAddingNewAttendeeState()
         setAttendeeData()
 
+        showImagePath()
+
     }
 
-    fun setAttendeeData(){
-        if(attendee != null){
+
+    fun showImagePath() {
+        Log.d("IMAGE PATH", currentPhotoPath)
+    }
+
+    fun setAttendeeData() {
+        if (attendee != null) {
             newAttendeeDialogBinding.attendeeNameTl.editText!!.setText(attendee.name)
-            if (attendee.pictureId.isNotEmpty()){
-                Glide.with(newAttendeeDialogBinding.root).load(attendee.pictureId).apply(RequestOptions.circleCropTransform()).into(newAttendeeDialogBinding.attendeeImg)
+            if (attendee.pictureId.isNotEmpty()) {
+                Glide.with(newAttendeeDialogBinding.root).load(attendee.pictureId)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(newAttendeeDialogBinding.attendeeImg)
             }
             newAttendeeDialogBinding.saveAttendeeBt.isEnabled = false
         }
@@ -106,92 +117,75 @@ class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee
         }
     }
 
-    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
-        val bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(
-            inContext.getContentResolver(),
-            inImage,
-            "Title",
-            null
-        )
-        imageUri = Uri.parse(path)
 
-        return imageUri
+    private fun createImageFile(): File {
+        // Create an image file name
+
+        val storageDir: File =
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+
+        return File.createTempFile(
+            "JPEG_${getTime()}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
     }
 
-    fun deleteFileAfterUpload(){
-        if (imageUri!= null){
+    fun deleteFileAfterUpload() {
+
+        if (currentPhotoPath.isNotEmpty())
             try {
-              //  File(getRealPathFromUri(requireContext(),imageUri)).getAbsoluteFile().delete()
-                    Log.d("IMAGE ==", imageUri.toString())
-               // requireContext().contentResolver .delete(Uri.parse(getRealPathFromUri(requireContext(),imageUri)), null,null)
+                File(currentPhotoPath).absoluteFile.delete()
+                currentPhotoPath = ""
+            } catch (e: Exception) {
 
-                //Environment.getExternal
-
-                val fDelete = File(getRealPathFromUri(requireContext(),imageUri))
-                if (fDelete.exists()) {
-                    if (fDelete.delete()) {
-                        MediaScannerConnection.scanFile(requireContext(), arrayOf(Environment.getExternalStorageDirectory().toString()), null) { path, uri ->
-                            Log.d("debug", "DONE")
-                        }
-                    }
-                }
-            }catch (e: Exception){
-                Log.e("DELETING PICTURE: ",e.toString())
             }
-        }
-    }
 
-    fun getRealPathFromUri(context: Context, contentUri: Uri?): String? {
-        var cursor: Cursor? = null
-        return try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
-            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            cursor.getString(column_index)
-        } finally {
-            if (cursor != null) {
-                cursor.close()
-            }
-        }
     }
 
 
     private fun getUiDataInput() {
 
-        if(imageBitmap != null){
-            val imageUri = getImageUri(requireContext(), imageBitmap!!)
-            if (imageUri != null){
-                newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl), imageUri)
-            }
-        }else{
-            newAttendeeViewModel.addEventAttendee(eventId, stringFromTl(newAttendeeDialogBinding.attendeeNameTl), null)
+        if (imageUri != null) {
+            newAttendeeViewModel.addEventAttendee(
+                eventId,
+                stringFromTl(newAttendeeDialogBinding.attendeeNameTl),
+                imageUri
+            )
+
+        } else {
+            newAttendeeViewModel.addEventAttendee(
+                eventId,
+                stringFromTl(newAttendeeDialogBinding.attendeeNameTl),
+                null
+            )
         }
 
     }
 
     private fun collectAddingNewAttendeeEvent() {
-        collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeEvent){ result ->
+        collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeEvent) { result ->
             if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.DismissDialog)
-                if (result.value){
+                if (result.value) {
                     deleteFileAfterUpload()
                     dismiss()
                 }
-            if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.ShowToast){
+            if (result is NewAttendeeViewModel.NewAttendeeDialogUIEvent.ShowToast) {
                 showLongToast(result.message)
             }
         }
     }
 
-    private fun collectAddingNewAttendeeState(){
-        collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeState){ result ->
-            if (result.isSuccess){
+    private fun collectAddingNewAttendeeState() {
+        collectLatestLifecycleFlow(newAttendeeViewModel.addNewAttendeeState) { result ->
+            if (result.isSuccess) {
                 newAttendeeDialogBinding.saveAttendeeBt.isEnabled = true
             }
 
-            if (result.isError){
+            if (result.isError) {
                 newAttendeeDialogBinding.saveAttendeeBt.isEnabled = true
             }
 
@@ -199,20 +193,41 @@ class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee
     }
 
     private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            activity?.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            // display error state to the user
+
+        showImagePath()
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    Log.d("IMAGE PROBLEM: ", ex.toString())
+                    null
+                }
+
+
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    imageUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.example.attendanceapp.fileprovider",
+                        it
+                    )
+
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            imageBitmap = data?.extras?.get("data") as Bitmap
-            newAttendeeDialogBinding.attendeeImg.setImageBitmap(imageBitmap)
-            //confirmSavingPicture(imageBitmap!!)
+            newAttendeeDialogBinding.attendeeImg.setImageURI(imageUri!!)
+            showImagePath()
+
 
         }
     }
@@ -222,12 +237,13 @@ class NewAttendeeDialog(private val eventId: Int, private val attendee: Attendee
         newAttendeeDialogListener.onDialogDismissed(true)
     }
 
-    interface NewAttendeeDialogListener{
+    interface NewAttendeeDialogListener {
         fun onDialogDismissed(value: Boolean)
     }
 
-    fun setListener(listener: NewAttendeeDialogListener){
+    fun setListener(listener: NewAttendeeDialogListener) {
         newAttendeeDialogListener = listener
     }
+
 
 }
